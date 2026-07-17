@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мерко Групп — Закупка зерновых, масличных и бобовых культур</title>
+  <meta name="description" content="Мерко Групп — закупка зерновых, масличных и бобовых культур в Запорожской, Херсонской областях и Крыму.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --green-900: #0f2b0f;
+      --green-800: #1a3a1a;
+      --green-700: #234d23;
+      --green-600: #2d6a2d;
+      --green-500: #3d8b3d;
+      --gold-500: #c8a84e;
+      --gold-400: #d4b85e;
+      --gold-300: #e8cc6e;
+      --cream: #faf8f2;
+      --white: #ffffff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-400: #9ca3af;
+      --gray-500: #6b7280;
+      --gray-700: #374151;
+      --gray-900: #111827;
+      --radius: 20px;
+      --radius-sm: 12px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: var(--gray-900);
+      line-height: 1.7;
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(15, 43, 15, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 0;
+    }
+
+    .header-inner {
+      max-width: 1200px; margin: 0 auto; padding: 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 14px; }
+    .logo-area img { height: 44px; width: 44px; border-radius: 50%; object-fit: cover; }
+    .logo-text { color: var(--white); font-size: 18px; font-weight: 800; letter-spacing: 0.5px; }
+    .logo-text b { color: var(--gold-400); }
+
+    nav { display: flex; gap: 8px; }
+    nav a {
+      color: rgba(255,255,255,0.7); text-decoration: none; font-size: 14px;
+      font-weight: 500; padding: 8px 16px; border-radius: 8px; transition: all 0.2s;
+    }
+    nav a:hover { color: var(--white); background: rgba(255,255,255,0.1); }
+
+    .mobile-menu-btn { display: none; background: none; border: none; cursor: pointer; padding: 8px; }
+    .mobile-menu-btn span { display: block; width: 22px; height: 2px; background: var(--gold-400); margin: 5px 0; border-radius: 2px; }
+
+    /* ===== HERO SLIDER ===== */
+    .hero {
+      min-height: 100vh;
+      position: relative; overflow: hidden;
+    }
+
+    .hero-slide {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background-size: cover; background-position: center;
+      opacity: 0; transition: opacity 1s ease-in-out;
+      pointer-events: none; z-index: 0;
+    }
+    .hero-slide.active { opacity: 1; z-index: 1; pointer-events: auto; }
+
+    .hero-slide::before {
+      content: ''; position: absolute; inset: 0;
+    }
+    .hero-slide--grain { background-image: url('hero-bg.jpg'); }
+    .hero-slide--grain::before {
+      background: linear-gradient(180deg, rgba(15,43,15,0.75) 0%, rgba(15,43,15,0.6) 40%, rgba(15,43,15,0.85) 100%);
+    }
+    .hero-slide--fert { background-image: url('ammonium-nitrate.png'); }
+    .hero-slide--fert::before {
+      background: linear-gradient(180deg, rgba(10,30,60,0.8) 0%, rgba(10,30,60,0.6) 40%, rgba(10,30,60,0.9) 100%);
+    }
+
+    .hero-content {
+      position: relative; z-index: 1; text-align: center;
+      max-width: 860px; padding: 120px 24px 80px;
+    }
+
+    .hero-dots {
+      position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 10px; z-index: 10;
+    }
+    .hero-dot {
+      width: 10px; height: 10px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.5);
+      background: transparent; cursor: pointer; transition: all 0.3s; padding: 0;
+    }
+    .hero-dot.active { background: var(--gold-400); border-color: var(--gold-400); width: 28px; border-radius: 5px; }
+
+    .hero-logo {
+      width: 110px; height: 110px; margin: 0 auto 32px;
+      border-radius: 50%; overflow: hidden;
+      border: 3px solid rgba(200,168,78,0.4);
+      box-shadow: 0 0 60px rgba(200,168,78,0.15), 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    .hero-logo img { width: 100%; height: 100%; object-fit: cover; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(200,168,78,0.15); border: 1px solid rgba(200,168,78,0.3);
+      padding: 6px 20px; border-radius: 50px; color: var(--gold-300);
+      font-size: 13px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;
+      margin-bottom: 24px; backdrop-filter: blur(10px);
+    }
+
+    .hero h1 {
+      color: var(--white); font-size: 56px; font-weight: 900;
+      line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px;
+    }
+    .hero h1 span { color: var(--gold-400); }
+
+    .hero-desc {
+      color: rgba(255,255,255,0.75); font-size: 19px; line-height: 1.7;
+      max-width: 580px; margin: 0 auto 36px;
+    }
+
+    .hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-500); color: var(--green-900);
+      padding: 16px 36px; border-radius: 12px; text-decoration: none;
+      font-weight: 700; font-size: 15px; transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(200,168,78,0.3);
+    }
+    .btn-primary:hover { background: var(--gold-300); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(200,168,78,0.4); }
+
+    .btn-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(255,255,255,0.08); color: var(--white);
+      padding: 16px 36px; border-radius: 12px; text-decoration: none;
+      font-weight: 600; font-size: 15px; transition: all 0.3s;
+      border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(10px);
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.3); }
+
+    .hero-stats {
+      display: flex; justify-content: center; gap: 48px;
+      margin-top: 56px; padding-top: 32px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat .num { color: var(--gold-400); font-size: 32px; font-weight: 800; }
+    .hero-stat .label { color: rgba(255,255,255,0.5); font-size: 13px; font-weight: 500; margin-top: 4px; }
+
+    /* ===== SECTIONS ===== */
+    section { padding: 100px 24px; }
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-label {
+      display: inline-block; font-size: 12px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; color: var(--green-600);
+      background: rgba(45,106,45,0.08); padding: 6px 16px; border-radius: 6px;
+      margin-bottom: 16px;
+    }
+    .section-header h2 { font-size: 40px; font-weight: 800; color: var(--gray-900); margin-bottom: 16px; letter-spacing: -0.5px; }
+    .section-header p { color: var(--gray-500); font-size: 18px; max-width: 500px; margin: 0 auto; }
+
+    .section-directions {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 12px;
+      margin-top: 24px; max-width: 800px; margin-left: auto; margin-right: auto;
+    }
+    .direction-item {
+      display: flex; align-items: baseline; gap: 8px;
+      font-size: 0.95rem; color: var(--gray-600);
+      background: var(--white); border-radius: 10px; padding: 10px 18px;
+      border: 1px solid #e5e7eb;
+    }
+    .direction-label {
+      font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+      padding: 2px 8px; border-radius: 4px; white-space: nowrap;
+    }
+    .direction-buy .direction-label { background: #e8f5e3; color: #2d6a2d; }
+    .direction-sell .direction-label { background: #eef4fb; color: #3e7cc9; }
+    .direction-service .direction-label { background: #fef3e2; color: #b8860b; }
+
+    /* ===== CULTURES (TABS + PRODUCT CARDS) ===== */
+    #cultures { background: var(--gray-50); }
+
+    /* Tabs */
+    .cultures-tabs {
+      display: flex; justify-content: center; gap: 8px;
+      margin-bottom: 48px; flex-wrap: wrap;
+    }
+    .cultures-tab {
+      background: var(--white); color: var(--gray-700);
+      padding: 14px 32px; border-radius: 12px; font-size: 15px; font-weight: 600;
+      border: 1px solid var(--gray-200); cursor: pointer;
+      transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px;
+      font-family: inherit;
+    }
+    .cultures-tab:hover {
+      border-color: var(--green-500); color: var(--green-700);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .cultures-tab.active {
+      background: linear-gradient(135deg, var(--green-700), var(--green-500));
+      color: var(--white); border-color: transparent;
+      box-shadow: 0 4px 20px rgba(45,106,45,0.3);
+    }
+    .cultures-tab .tab-count {
+      background: rgba(0,0,0,0.1); padding: 2px 10px; border-radius: 20px;
+      font-size: 12px; font-weight: 700;
+    }
+    .cultures-tab.active .tab-count {
+      background: rgba(255,255,255,0.2);
+    }
+
+    /* Tab panels */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: fadeUp 0.4s ease-out; }
+
+    .tab-note {
+      display: flex; align-items: center; gap: 10px;
+      background: linear-gradient(135deg, #f0f7ee 0%, #e8f5e3 100%);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px; padding: 14px 20px; margin-bottom: 20px;
+      font-size: 0.95rem; color: #2d5016; font-weight: 500;
+    }
+    .tab-note svg { flex-shrink: 0; }
+    .tab-note--blue {
+      background: linear-gradient(135deg, #eef4fb 0%, #e3edf8 100%);
+      border-left-color: #3e7cc9; color: #1a3a5c;
+    }
+
+    /* Product cards */
+    .product-list { display: flex; flex-direction: column; gap: 24px; }
+
+    .product-card {
+      background: var(--white); border-radius: var(--radius);
+      overflow: hidden; border: 1px solid var(--gray-200);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      transition: all 0.3s;
+      display: grid; grid-template-columns: 280px 1fr; min-height: 220px;
+    }
+    .product-card:hover {
+      box-shadow: 0 12px 40px rgba(0,0,0,0.08);
+      border-color: var(--green-500);
+      transform: translateY(-4px);
+    }
+
+    .product-img {
+      position: relative; overflow: hidden;
+    }
+    .product-img img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.6s;
+    }
+    .product-card:hover .product-img img { transform: scale(1.05); }
+    .product-img::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(15,43,15,0.15), transparent);
+    }
+
+    .product-body {
+      padding: 32px; display: flex; flex-direction: column; justify-content: center;
+    }
+
+    .product-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 20px;
+    }
+    .product-header h3 {
+      font-size: 24px; font-weight: 800; color: var(--green-800);
+    }
+    .product-badge {
+      background: rgba(45,106,45,0.08); color: var(--green-600);
+      padding: 4px 12px; border-radius: 6px; font-size: 12px;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+
+    /* Specs table */
+    .product-specs {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px; margin-bottom: 20px;
+    }
+    .spec-item {
+      background: var(--gray-50); border-radius: 10px; padding: 14px 16px;
+      border: 1px solid var(--gray-100);
+      transition: all 0.2s;
+    }
+    .product-card:hover .spec-item {
+      background: rgba(45,106,45,0.04);
+      border-color: rgba(45,106,45,0.1);
+    }
+    .spec-label {
+      font-size: 11px; font-weight: 600; color: var(--gray-400);
+      text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;
+    }
+    .spec-value {
+      font-size: 16px; font-weight: 700; color: var(--gray-900);
+    }
+
+    .product-desc {
+      font-size: 14px; color: var(--gray-500); line-height: 1.7;
+      margin-bottom: 24px;
+    }
+
+    .product-actions {
+      display: flex; gap: 12px; flex-wrap: wrap;
+    }
+    .btn-product {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--gold-500); color: var(--green-900);
+      padding: 12px 28px; border-radius: 10px; text-decoration: none;
+      font-weight: 700; font-size: 14px; transition: all 0.3s;
+      box-shadow: 0 2px 12px rgba(200,168,78,0.25);
+    }
+    .btn-product:hover {
+      background: var(--gold-300); transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(200,168,78,0.35);
+    }
+    .btn-product-outline {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--green-700);
+      padding: 12px 28px; border-radius: 10px; text-decoration: none;
+      font-weight: 600; font-size: 14px; transition: all 0.3s;
+      border: 1px solid var(--gray-200);
+    }
+    .btn-product-outline:hover {
+      border-color: var(--green-500); background: rgba(45,106,45,0.04);
+    }
+
+    /* ===== FERTILIZER CARDS ===== */
+    .subcategory-title {
+      font-size: 20px; font-weight: 800; color: var(--green-800);
+      margin: 40px 0 20px; padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray-200);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .subcategory-title:first-child { margin-top: 0; }
+    .subcategory-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      display: inline-block;
+    }
+
+    .product-icon-block {
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px;
+      position: relative; overflow: hidden;
+    }
+    .product-icon-block .formula {
+      font-size: 32px; font-weight: 900; color: rgba(255,255,255,0.95);
+      letter-spacing: -1px; position: relative; z-index: 1;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .product-icon-block .formula sub { font-size: 20px; }
+    .product-icon-block .type-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1.5px; color: rgba(255,255,255,0.7);
+      position: relative; z-index: 1;
+    }
+    .product-icon-block::after {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at 30% 70%, rgba(255,255,255,0.1) 0%, transparent 60%);
+    }
+
+    /* Gradient themes for fertilizer types */
+    .grad-nitrogen { background: linear-gradient(135deg, #1a6b3c, #2d9a5d, #1a6b3c); }
+    .grad-phosphorus { background: linear-gradient(135deg, #b35c00, #e8870a, #b35c00); }
+    .grad-potassium { background: linear-gradient(135deg, #8b2252, #c44d7b, #8b2252); }
+    .grad-complex { background: linear-gradient(135deg, #2a5298, #3e7cc9, #2a5298); }
+
+    /* Responsive for product cards */
+    @media (max-width: 768px) {
+      .product-card { grid-template-columns: 1fr; }
+      .product-img { height: 200px; }
+      .product-icon-block { height: 180px; }
+      .product-body { padding: 24px; }
+      .product-header h3 { font-size: 20px; }
+      .product-specs { grid-template-columns: repeat(2, 1fr); }
+      .cultures-tab { padding: 10px 20px; font-size: 13px; }
+    }
+    @media (max-width: 480px) {
+      .product-specs { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .product-actions { flex-direction: column; }
+      .btn-product, .btn-product-outline { justify-content: center; }
+    }
+
+    /* ===== ADVANTAGES ===== */
+    .advantages-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+    .advantage-card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 36px 28px; border: 1px solid var(--gray-200);
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .advantage-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--green-600), var(--gold-500));
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .advantage-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.08); transform: translateY(-4px); }
+    .advantage-card:hover::before { opacity: 1; }
+
+    .advantage-icon {
+      width: 52px; height: 52px; border-radius: var(--radius-sm);
+      background: linear-gradient(135deg, var(--green-700), var(--green-500));
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .advantage-card h3 { font-size: 17px; font-weight: 700; color: var(--gray-900); margin-bottom: 8px; }
+    .advantage-card p { font-size: 14px; color: var(--gray-500); line-height: 1.6; }
+
+    /* ===== REGION ===== */
+    .region-banner {
+      background: url('hero-bg.jpg') center center / cover no-repeat;
+      position: relative; padding: 80px 24px; text-align: center;
+    }
+    .region-banner::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(15,43,15,0.92), rgba(45,106,45,0.88));
+    }
+    .region-banner > * { position: relative; z-index: 1; }
+    .region-banner h2 { color: var(--white); font-size: 32px; font-weight: 800; margin-bottom: 24px; }
+    .region-tags { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+    .region-tag {
+      background: rgba(255,255,255,0.1); color: var(--white);
+      padding: 14px 32px; border-radius: 12px; font-size: 16px; font-weight: 600;
+      backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.15);
+      transition: all 0.3s;
+    }
+    .region-tag:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+
+    /* ===== CONTACTS ===== */
+    #contacts { background: var(--gray-50); }
+
+    .contacts-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+    .contact-card {
+      background: var(--white); border-radius: var(--radius);
+      padding: 28px; display: flex; align-items: center; gap: 18px;
+      border: 1px solid var(--gray-200); transition: all 0.3s;
+    }
+    .contact-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.06); border-color: var(--green-500); }
+
+    .contact-avatar {
+      width: 52px; height: 52px; min-width: 52px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--green-700), var(--green-500));
+      display: flex; align-items: center; justify-content: center;
+      color: var(--white); font-size: 20px; font-weight: 800;
+    }
+
+    .contact-info h3 { font-size: 16px; font-weight: 700; color: var(--gray-900); margin-bottom: 2px; }
+    .contact-info .role { font-size: 12px; color: var(--green-600); font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .contact-info a {
+      color: var(--gray-700); text-decoration: none; font-size: 17px; font-weight: 700; transition: color 0.2s;
+    }
+    .contact-info a:hover { color: var(--green-600); }
+
+    /* ===== FOOTER ===== */
+    footer { background: var(--green-900); padding: 48px 24px; text-align: center; }
+    footer .footer-logo { color: var(--white); font-size: 18px; font-weight: 800; margin-bottom: 8px; letter-spacing: 1px; }
+    footer .footer-logo b { color: var(--gold-400); }
+    footer p { color: rgba(255,255,255,0.4); font-size: 13px; }
+
+    /* ===== TELEGRAM BANNER ===== */
+    .tg-banner {
+      background: linear-gradient(135deg, #0088cc, #00aced);
+      padding: 56px 24px; text-align: center;
+    }
+    .tg-banner-inner {
+      max-width: 700px; margin: 0 auto;
+    }
+    .tg-banner h2 { color: var(--white); font-size: 28px; font-weight: 800; margin-bottom: 12px; }
+    .tg-banner p { color: rgba(255,255,255,0.85); font-size: 16px; margin-bottom: 28px; line-height: 1.7; }
+    .tg-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--white); color: #0088cc;
+      padding: 16px 36px; border-radius: 12px; text-decoration: none;
+      font-weight: 700; font-size: 16px; transition: all 0.3s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .tg-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.2); }
+
+    /* ===== FLOATING TELEGRAM ===== */
+    .tg-float {
+      position: fixed; bottom: 24px; right: 24px; z-index: 99;
+      width: 60px; height: 60px; border-radius: 50%;
+      background: #0088cc; color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none; box-shadow: 0 4px 20px rgba(0,136,204,0.4);
+      transition: all 0.3s; animation: pulse 2s infinite;
+    }
+    .tg-float:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(0,136,204,0.5); }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 4px 20px rgba(0,136,204,0.4); }
+      50% { box-shadow: 0 4px 30px rgba(0,136,204,0.6), 0 0 0 10px rgba(0,136,204,0.1); }
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { animation: fadeUp 0.8s ease-out forwards; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .contacts-grid { grid-template-columns: repeat(2, 1fr); }
+      .advantages-grid { grid-template-columns: repeat(2, 1fr); }
+      .hero h1 { font-size: 42px; }
+      .hero-stats { gap: 32px; }
+    }
+
+    @media (max-width: 768px) {
+      nav { display: none; position: absolute; top: 100%; left: 0; right: 0;
+        background: rgba(15,43,15,0.98); flex-direction: column; padding: 12px;
+        backdrop-filter: blur(20px); border-top: 1px solid rgba(255,255,255,0.08); }
+      nav.active { display: flex; }
+      nav a { padding: 12px 16px; }
+      .mobile-menu-btn { display: block; }
+
+      .hero { min-height: 100vh; padding: 0; }
+      .hero-content { padding: 100px 20px 60px; }
+      .hero h1 { font-size: 30px; }
+      .hero-desc { font-size: 15px; margin-bottom: 28px; }
+      .hero-stats { gap: 32px; flex-direction: row; margin-top: 36px; padding-top: 24px; }
+      .hero-stat .num { font-size: 26px; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-logo { width: 80px; height: 80px; margin-bottom: 20px; }
+      .hero-badge { font-size: 11px; padding: 5px 14px; margin-bottom: 16px; }
+
+      .advantages-grid, .contacts-grid { grid-template-columns: 1fr; }
+      .section-header h2 { font-size: 30px; }
+      section { padding: 72px 16px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 28px; }
+      .hero-logo { width: 80px; height: 80px; }
+      .btn-primary, .btn-outline { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <img src="logo.png" alt="Мерко Групп">
+        <span class="logo-text">МЕРКО <b>ГРУПП</b></span>
+      </div>
+      <nav id="mainNav">
+        <a href="#cultures">Продукция</a>
+        <a href="#advantages">Преимущества</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+      <button class="mobile-menu-btn" onclick="document.getElementById('mainNav').classList.toggle('active')" aria-label="Меню">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO SLIDER -->
+  <section class="hero">
+
+    <!-- Слайд 1: Зерно -->
+    <div class="hero-slide hero-slide--grain active">
+      <div class="hero-content">
+        <div class="hero-logo">
+          <img src="logo.png" alt="Мерко Групп">
+        </div>
+        <div class="hero-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Запорожская обл. &bull; Херсонская обл. &bull; Крым
+        </div>
+        <h1>Закупаем зерновые,<br>масличные и <span>бобовые</span></h1>
+        <p class="hero-desc">Надёжный партнёр для фермеров, агентов и трейдеров. Полный цикл от закупки до логистики и оформления документов.</p>
+        <div class="hero-actions">
+          <a href="#contacts" class="btn-primary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Связаться с нами
+          </a>
+          <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-outline">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            Telegram-бот
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num">3</div>
+            <div class="label">Региона</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">10+</div>
+            <div class="label">Культур</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Слайд 2: Удобрения -->
+    <div class="hero-slide hero-slide--fert">
+      <div class="hero-content">
+        <div class="hero-logo">
+          <img src="logo.png" alt="Мерко Групп">
+        </div>
+        <div class="hero-badge" style="background: rgba(62,124,201,0.2); border-color: rgba(62,124,201,0.4); color: #9ec5f5;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Без предоплаты
+        </div>
+        <h1>Удобрения с доставкой<br>на <span>хозяйство</span></h1>
+        <p class="hero-desc">Аммиачная селитра, карбамид, КАС-32, аммофос, диаммофос, калий, нитроаммофоска и другие. Доставка по всему региону.</p>
+        <div class="hero-actions">
+          <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-primary" style="background: #3e7cc9; color: #fff; box-shadow: 0 4px 20px rgba(62,124,201,0.4);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Узнать цену
+          </a>
+          <a href="#contacts" class="btn-outline">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            Связаться
+          </a>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="num">8</div>
+            <div class="label">Видов удобрений</div>
+          </div>
+          <div class="hero-stat">
+            <div class="num">0₽</div>
+            <div class="label">Предоплата</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Точки навигации -->
+    <div class="hero-dots">
+      <button class="hero-dot active" data-slide="0"></button>
+      <button class="hero-dot" data-slide="1"></button>
+    </div>
+
+  </section>
+
+  <!-- CULTURES / ПРОДУКЦИЯ -->
+  <section id="cultures">
+    <div class="container">
+      <div class="section-header">
+        <h2>Продукция и услуги</h2>
+        <div class="section-directions">
+          <div class="direction-item direction-buy">
+            <span class="direction-label">Закупаем</span>
+            <span>Зерновые, Масличные, Бобовые &mdash; от 27 т</span>
+          </div>
+          <div class="direction-item direction-sell">
+            <span class="direction-label">Продаём</span>
+            <span>Удобрения, Средства защиты растений, Посевной материал, Дизельное топливо</span>
+          </div>
+          <div class="direction-item direction-service">
+            <span class="direction-label">Услуги</span>
+            <span>Декларация соответствия, Карантинный сертификат, Проверка контрагентов на благонадёжность</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="cultures-tabs">
+        <button class="cultures-tab active" data-tab="grain">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Зерновые
+          <span class="tab-count">2</span>
+        </button>
+        <button class="cultures-tab" data-tab="oilseed">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          Масличные
+          <span class="tab-count">5</span>
+        </button>
+        <button class="cultures-tab" data-tab="legumes">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66L7 18h2l2 2c3-3 4-7 4-11z"/><path d="M14.54 12.08L12 10.56V6"/></svg>
+          Бобовые
+          <span class="tab-count">3</span>
+        </button>
+        <button class="cultures-tab" data-tab="fertilizers">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16h10"/></svg>
+          Удобрения
+          <span class="tab-count">8</span>
+        </button>
+      </div>
+
+      <!-- ===== TAB: ЗЕРНОВЫЕ ===== -->
+      <div class="tab-panel active" id="tab-grain">
+        <div class="tab-note">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          100% оплата на весах
+        </div>
+        <div class="product-list">
+
+          <!-- Пшеница -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="wheat.webp" alt="Пшеница" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Пшеница</h3>
+                <span class="product-badge">Зерновые</span>
+              </div>
+              <p class="product-desc">Закупаем пшеницу всех классов. Оперативный выезд для отбора проб. Вывозим своим транспортом со склада.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ячмень -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="barley.webp" alt="Ячмень" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Ячмень</h3>
+                <span class="product-badge">Зерновые</span>
+              </div>
+              <p class="product-desc">Закупаем фуражный и пивоваренный ячмень. Быстрый расчёт, прозрачные условия приёмки и лабораторный анализ качества.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== TAB: МАСЛИЧНЫЕ ===== -->
+      <div class="tab-panel" id="tab-oilseed">
+        <div class="tab-note">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          100% оплата на весах
+        </div>
+        <div class="product-list">
+
+          <!-- Подсолнечник -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="sunflower-seeds.webp" alt="Подсолнечник" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Подсолнечник</h3>
+                <span class="product-badge">Масличные</span>
+              </div>
+              <p class="product-desc">Закупаем подсолнечник. Оперативная оценка качества и вывоз своим транспортом со склада.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Рапс -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="rapeseed.webp" alt="Рапс" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Рапс</h3>
+                <span class="product-badge">Масличные</span>
+              </div>
+              <p class="product-desc">Принимаем рапс озимый и яровой. Полное оформление документов и карантинных сертификатов. Собственная логистика.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Соя -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="soybeans.webp" alt="Соя" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Соя</h3>
+                <span class="product-badge">Масличные</span>
+              </div>
+              <p class="product-desc">Закупаем сою продовольственную и кормовую. Гибкие условия приёмки и конкурентоспособные цены по рынку.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Лён -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="flax-seeds.webp" alt="Лён" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Лён</h3>
+                <span class="product-badge">Масличные</span>
+              </div>
+              <p class="product-desc">Закупаем лён масличный. Вывозим своим транспортом со склада. Полное документальное сопровождение.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Горчица -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="mustard-seeds.webp" alt="Горчица" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Горчица</h3>
+                <span class="product-badge">Масличные</span>
+              </div>
+              <p class="product-desc">Принимаем горчицу жёлтую и сарептскую. Работаем напрямую с фермерами и агентами. Быстрая оплата.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== TAB: БОБОВЫЕ ===== -->
+      <div class="tab-panel" id="tab-legumes">
+        <div class="tab-note">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          100% оплата на весах
+        </div>
+        <div class="product-list">
+
+          <!-- Горох -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="peas.webp" alt="Горох" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Горох</h3>
+                <span class="product-badge">Бобовые</span>
+              </div>
+              <p class="product-desc">Закупаем горох продовольственный и кормовой. Лабораторный анализ качества при приёмке. Возможность хранения на элеваторе.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Нут -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="chickpeas.webp" alt="Нут" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Нут</h3>
+                <span class="product-badge">Бобовые</span>
+              </div>
+              <p class="product-desc">Принимаем нут всех типов и калибров. Особенно интересен крупнокалиберный нут типа Кабули. Работаем по рыночным ценам.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Чечевица -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="lentils.webp" alt="Чечевица" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Чечевица</h3>
+                <span class="product-badge">Бобовые</span>
+              </div>
+              <p class="product-desc">Закупаем чечевицу продовольственную. Оперативная оценка качества и быстрый расчёт после приёмки партии.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== TAB: УДОБРЕНИЯ ===== -->
+      <div class="tab-panel" id="tab-fertilizers">
+        <div class="tab-note tab-note--blue">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Без предоплаты
+        </div>
+        <div class="product-list">
+
+          <!-- Подкатегория: Азотные -->
+          <div class="subcategory-title">
+            <span class="subcategory-dot" style="background: #2d9a5d;"></span>
+            Азотные удобрения
+          </div>
+
+          <!-- Аммиачная селитра -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="ammonium-nitrate.webp" alt="Аммиачная селитра" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Аммиачная селитра</h3>
+                <span class="product-badge">N 34.4%</span>
+              </div>
+              <div class="product-specs">
+                <div class="spec-item">
+                  <div class="spec-label">Азот (N)</div>
+                  <div class="spec-value">34.4%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Форма</div>
+                  <div class="spec-value">Гранулы</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Влажность</div>
+                  <div class="spec-value">до 0.3%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Фракция</div>
+                  <div class="spec-value">1–4 мм</div>
+                </div>
+              </div>
+              <p class="product-desc">Универсальное азотное удобрение для основного и предпосевного внесения. Быстро усваивается, подходит для всех типов почв. Содержит аммонийную и нитратную формы азота.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Карбамид -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="carbamide.webp" alt="Карбамид" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Карбамид (мочевина)</h3>
+                <span class="product-badge">N 46.2%</span>
+              </div>
+              <div class="product-specs">
+                <div class="spec-item">
+                  <div class="spec-label">Азот (N)</div>
+                  <div class="spec-value">46.2%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Форма</div>
+                  <div class="spec-value">Гранулы / Приллы</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Влажность</div>
+                  <div class="spec-value">до 0.3%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Биурет</div>
+                  <div class="spec-value">до 1.4%</div>
+                </div>
+              </div>
+              <p class="product-desc">Самое концентрированное твёрдое азотное удобрение. Применяется для основного внесения, подкормок и приготовления КАС. Хорошо растворяется в воде.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- КАС-32 -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="kas32.webp" alt="КАС-32" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>КАС-32</h3>
+                <span class="product-badge">N 32%</span>
+              </div>
+              <div class="product-specs">
+                <div class="spec-item">
+                  <div class="spec-label">Азот (N)</div>
+                  <div class="spec-value">32%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Форма</div>
+                  <div class="spec-value">Жидкий раствор</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Плотность</div>
+                  <div class="spec-value">1.32 г/см³</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">pH</div>
+                  <div class="spec-value">7–8</div>
+                </div>
+              </div>
+              <p class="product-desc">Карбамидно-аммиачная смесь — жидкое азотное удобрение для точного внесения опрыскивателями. Три формы азота обеспечивают продолжительное питание растений.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Подкатегория: Фосфорные -->
+          <div class="subcategory-title">
+            <span class="subcategory-dot" style="background: #e8870a;"></span>
+            Фосфорные удобрения
+          </div>
+
+          <!-- Аммофос -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="ammophos.webp" alt="Аммофос" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Аммофос</h3>
+                <span class="product-badge">NP 12:52</span>
+              </div>
+              <div class="product-specs">
+                <div class="spec-item">
+                  <div class="spec-label">Азот (N)</div>
+                  <div class="spec-value">12%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Фосфор (P₂O₅)</div>
+                  <div class="spec-value">52%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Форма</div>
+                  <div class="spec-value">Гранулы</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Растворимость</div>
+                  <div class="spec-value">Высокая</div>
+                </div>
+              </div>
+              <p class="product-desc">Концентрированное фосфорно-азотное удобрение для основного и рядкового внесения. Высокое содержание усвояемого фосфора стимулирует развитие корневой системы.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Диаммофос -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="dap.webp" alt="Диаммонийфосфат" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Диаммонийфосфат (DAP)</h3>
+                <span class="product-badge">NP 18:46</span>
+              </div>
+              <div class="product-specs">
+                <div class="spec-item">
+                  <div class="spec-label">Азот (N)</div>
+                  <div class="spec-value">18%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Фосфор (P₂O₅)</div>
+                  <div class="spec-value">46%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Форма</div>
+                  <div class="spec-value">Гранулы</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">pH раствора</div>
+                  <div class="spec-value">7.5–8.5</div>
+                </div>
+              </div>
+              <p class="product-desc">Высокоэффективное фосфорное удобрение с повышенным содержанием азота. Идеально для осеннего внесения под зерновые и масличные культуры.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Подкатегория: Калийные -->
+          <div class="subcategory-title">
+            <span class="subcategory-dot" style="background: #c44d7b;"></span>
+            Калийные удобрения
+          </div>
+
+          <!-- Хлористый калий -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="potassium-chloride.webp" alt="Хлористый калий" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Хлористый калий</h3>
+                <span class="product-badge">K₂O 60%</span>
+              </div>
+              <div class="product-specs">
+                <div class="spec-item">
+                  <div class="spec-label">Калий (K₂O)</div>
+                  <div class="spec-value">60%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Форма</div>
+                  <div class="spec-value">Гранулы</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Влажность</div>
+                  <div class="spec-value">до 0.5%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Фракция</div>
+                  <div class="spec-value">2–5 мм</div>
+                </div>
+              </div>
+              <p class="product-desc">Основное калийное удобрение для осеннего внесения. Повышает устойчивость растений к засухе и заболеваниям, улучшает качество зерна и масличных.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Подкатегория: Комплексные -->
+          <div class="subcategory-title">
+            <span class="subcategory-dot" style="background: #3e7cc9;"></span>
+            Комплексные удобрения
+          </div>
+
+          <!-- Нитроаммофоска -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="npk.webp" alt="Нитроаммофоска" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Нитроаммофоска</h3>
+                <span class="product-badge">NPK 16:16:16</span>
+              </div>
+              <div class="product-specs">
+                <div class="spec-item">
+                  <div class="spec-label">Азот (N)</div>
+                  <div class="spec-value">16%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Фосфор (P₂O₅)</div>
+                  <div class="spec-value">16%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Калий (K₂O)</div>
+                  <div class="spec-value">16%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Форма</div>
+                  <div class="spec-value">Гранулы</div>
+                </div>
+              </div>
+              <p class="product-desc">Универсальное тройное удобрение со сбалансированным составом. Применяется для основного и припосевного внесения под все культуры на всех типах почв.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Сульфоаммофос -->
+          <div class="product-card">
+            <div class="product-img">
+              <img src="sulfoammophos.webp" alt="Сульфоаммофос" loading="lazy" decoding="async">
+            </div>
+            <div class="product-body">
+              <div class="product-header">
+                <h3>Сульфоаммофос</h3>
+                <span class="product-badge">NPS 20:20:14</span>
+              </div>
+              <div class="product-specs">
+                <div class="spec-item">
+                  <div class="spec-label">Азот (N)</div>
+                  <div class="spec-value">20%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Фосфор (P₂O₅)</div>
+                  <div class="spec-value">20%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Сера (S)</div>
+                  <div class="spec-value">14%</div>
+                </div>
+                <div class="spec-item">
+                  <div class="spec-label">Форма</div>
+                  <div class="spec-value">Гранулы</div>
+                </div>
+              </div>
+              <p class="product-desc">Азотно-фосфорное удобрение с серой. Особенно эффективно для рапса, подсолнечника и бобовых культур. Сера повышает усвоение азота и улучшает качество урожая.</p>
+              <div class="product-actions">
+                <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="btn-product">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                  Узнать цену
+                </a>
+                <a href="#contacts" class="btn-product-outline">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                  Связаться
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ADVANTAGES -->
+  <section id="advantages">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Преимущества</div>
+        <h2>Почему выбирают нас</h2>
+        <p>Полный спектр услуг для удобного сотрудничества</p>
+      </div>
+      <div class="advantages-grid">
+        <div class="advantage-card">
+          <div class="advantage-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3>Выгодные цены</h3>
+          <p>Конкурентные закупочные цены и прозрачные условия сотрудничества</p>
+        </div>
+        <div class="advantage-card">
+          <div class="advantage-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <h3>Быстрая оплата</h3>
+          <p>Оперативные расчёты без задержек и скрытых комиссий</p>
+        </div>
+        <div class="advantage-card">
+          <div class="advantage-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+          </div>
+          <h3>Полное сопровождение</h3>
+          <p>Декларации, карантинные сертификаты и полное оформление</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REGION -->
+  <div class="region-banner">
+    <h2>География работы</h2>
+    <div class="region-tags">
+      <span class="region-tag">Запорожская область</span>
+      <span class="region-tag">Херсонская область</span>
+      <span class="region-tag">Крым</span>
+    </div>
+  </div>
+
+  <!-- CONTACTS -->
+  <section id="contacts">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Контакты</div>
+        <h2>Свяжитесь с нами</h2>
+        <p>Каждый отдел на связи напрямую</p>
+      </div>
+      <div class="contacts-grid">
+        <div class="contact-card">
+          <div class="contact-avatar">Н</div>
+          <div class="contact-info">
+            <h3>Никита</h3>
+            <div class="role">Работа с фермерами</div>
+            <a href="tel:+79900165271">+7 990 016-52-71</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">Е</div>
+          <div class="contact-info">
+            <h3>Екатерина</h3>
+            <div class="role">Работа с фермерами</div>
+            <a href="tel:+79901420102">+7 990 142-01-02</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">А</div>
+          <div class="contact-info">
+            <h3>Александр</h3>
+            <div class="role">Агенты и трейдеры</div>
+            <a href="tel:+79900165274">+7 990 016-52-74</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">И</div>
+          <div class="contact-info">
+            <h3>Иван</h3>
+            <div class="role">Отбор анализов</div>
+            <a href="tel:+79900041007">+7 990 004-10-07</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">М</div>
+          <div class="contact-info">
+            <h3>Матвей</h3>
+            <div class="role">Декларации и документы</div>
+            <a href="tel:+79185894024">+7 918 589-40-24</a>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">Н</div>
+          <div class="contact-info">
+            <h3>Никита</h3>
+            <div class="role">Логистика</div>
+            <a href="tel:+79786838762">+7 978 683-87-62</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TELEGRAM BANNER -->
+  <div class="tg-banner">
+    <div class="tg-banner-inner">
+      <h2>Telegram-бот @MercoGroupnew_bot</h2>
+      <p>Хотите быстро узнать цену с места или заказать обратный звонок? Переходите в наш бот!</p>
+      <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="tg-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#0088cc"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Открыть бота
+      </a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-logo">МЕРКО <b>ГРУПП</b></div>
+      <p>&copy; 2026 Мерко Групп. Закупка зерновых, масличных и бобовых культур.</p>
+    </div>
+  </footer>
+
+  <!-- FLOATING TELEGRAM BUTTON -->
+  <a href="https://t.me/MercoGroupnew_bot" target="_blank" class="tg-float" aria-label="Telegram бот">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+  </a>
+
+  <!-- TAB SWITCHING SCRIPT -->
+  <script>
+    document.querySelectorAll('.cultures-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.cultures-tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+        tab.classList.add('active');
+        var panelId = 'tab-' + tab.getAttribute('data-tab');
+        document.getElementById(panelId).classList.add('active');
+      });
+    });
+
+    // Hero Slider
+    (function() {
+      var slides = document.querySelectorAll('.hero-slide');
+      var dots = document.querySelectorAll('.hero-dot');
+      var current = 0;
+      var interval = 6000;
+
+      function goTo(index) {
+        slides[current].classList.remove('active');
+        dots[current].classList.remove('active');
+        current = index;
+        slides[current].classList.add('active');
+        dots[current].classList.add('active');
+      }
+
+      function next() {
+        goTo((current + 1) % slides.length);
+      }
+
+      var timer = setInterval(next, interval);
+
+      dots.forEach(function(dot) {
+        dot.addEventListener('click', function() {
+          clearInterval(timer);
+          goTo(parseInt(dot.getAttribute('data-slide')));
+          timer = setInterval(next, interval);
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
