@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Калькулятор приёмки — съём по качеству</title>
+<style>
+  :root{
+    --bg:#0f1419; --card:#1a212b; --line:#2a3441; --txt:#e6edf3; --muted:#8b97a7;
+    --accent:#4ea1ff; --good:#2ecc71; --bad:#ff6b6b; --warn:#ffb547;
+    --chip-hi:#3a2330; --chip-hi-b:#ff6b6b; --chip-lo:#1f2f3a; --chip-lo-b:#4ea1ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding:18px}
+  h1{font-size:21px;margin:0 0 4px}
+  .sub{color:var(--muted);margin:0 0 18px;font-size:13px}
+  .wrap{max-width:920px;margin:0 auto}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+  .row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end}
+  label{display:block;font-size:12px;color:var(--muted);margin-bottom:4px}
+  select,input{background:#0d1218;border:1px solid var(--line);color:var(--txt);border-radius:8px;padding:8px 10px;font-size:15px}
+  input{width:110px;text-align:right}
+  select{min-width:220px}
+  table{width:100%;border-collapse:collapse;margin-top:8px}
+  th,td{padding:8px 8px;border-bottom:1px solid var(--line);text-align:right}
+  th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.3px}
+  td.name,th.name{text-align:left}
+  .chip{display:inline-block;font-size:11px;padding:2px 7px;border-radius:20px;border:1px solid;white-space:nowrap}
+  .chip.hi{background:var(--chip-hi);border-color:var(--chip-hi-b);color:#ffb3b3}
+  .chip.lo{background:var(--chip-lo);border-color:var(--chip-lo-b);color:#a9d4ff}
+  .snyom{font-variant-numeric:tabular-nums;font-weight:600}
+  .snyom.zero{color:var(--muted);font-weight:400}
+  .snyom.pos{color:var(--bad)}
+  .totbar{display:flex;gap:18px;flex-wrap:wrap;align-items:center;margin-top:6px}
+  .big{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums}
+  .big.down{color:var(--bad)} .big.eq{color:var(--good)}
+  .pill{background:#0d1218;border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+  .pill .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.3px}
+  .pill .v{font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}
+  small.hint{color:var(--muted);font-size:11px}
+  .miniin{width:74px}
+  .foot{color:var(--muted);font-size:12px;margin-top:10px}
+  code{background:#0d1218;border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Калькулятор приёмки зерна — съём по качеству</h1>
+  <p class="sub">Универсальный расчёт по культурам с автосъёмом. Съём всегда ≥ 0 и только уменьшает цену.
+  Направление показателя: <span class="chip hi">больше → хуже</span> <span class="chip lo">меньше → хуже</span></p>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label>Культура</label>
+        <select id="crop"></select>
+      </div>
+      <div>
+        <label>Базовая цена, ₽/т</label>
+        <input id="basePrice" type="number" step="50" value="35000">
+      </div>
+      <div style="flex:1"></div>
+      <small class="hint">Норму и ставку можно править прямо в таблице — расчёт пересчитывается на лету.</small>
+    </div>
+  </div>
+
+  <div class="card">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th class="name">Показатель</th>
+          <th>Направление</th>
+          <th>Норма (базис)</th>
+          <th>Факт</th>
+          <th>Ставка, %/ед.</th>
+          <th>Откл. в худшую</th>
+          <th>Съём, %</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="foot" id="rowsNote"></div>
+  </div>
+
+  <div class="card">
+    <div class="totbar">
+      <div class="pill"><div class="k">Базовая цена</div><div class="v" id="oBase">—</div></div>
+      <div class="pill"><div class="k">Суммарный съём</div><div class="v" id="oSnyomPct">—</div></div>
+      <div class="pill"><div class="k">Съём, ₽/т</div><div class="v" id="oSnyomRub">—</div></div>
+      <div style="flex:1"></div>
+      <div style="text-align:right">
+        <div class="k" style="color:var(--muted);font-size:11px;text-transform:uppercase">Итоговая цена приёмки</div>
+        <div class="big" id="oFinal">—</div>
+        <div id="oVerdict" style="font-size:12px;color:var(--muted)"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Формула съёма по каждому показателю:
+    <code>higher → съём = max(0, факт − норма) × ставка</code>;
+    <code>lower → съём = max(0, норма − факт) × ставка</code>.
+    Итог: <code>цена = базовая × (1 − Σсъём% / 100)</code>.
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   СПРАВОЧНИК КУЛЬТУР И ПОКАЗАТЕЛЕЙ
+   worseWhen: 'higher' — чем БОЛЬШЕ факт, тем хуже (влажность, сор)
+   worseWhen: 'lower'  — чем МЕНЬШЕ факт, тем хуже (масличность, натура, клейковина, протеин)
+   rate — ставка съёма, % от цены за 1 единицу отклонения в худшую сторону
+   ============================================================ */
+const CROPS = {
+  "Подсолнечник": { base: 35000, params: [
+    { key:"vlaga",  name:"Влажность, %",        norm:7,  fact:7,  rate:1.5, worseWhen:"higher" },
+    { key:"sor",    name:"Сорная примесь, %",   norm:3,  fact:3,  rate:1.0, worseWhen:"higher" },
+    { key:"maslo",  name:"Масличность, %",      norm:44, fact:44, rate:1.5, worseWhen:"lower"  },
+  ]},
+  "Пшеница": { base: 16000, params: [
+    { key:"vlaga",  name:"Влажность, %",        norm:14, fact:14, rate:1.0, worseWhen:"higher" },
+    { key:"sor",    name:"Сорная примесь, %",   norm:2,  fact:2,  rate:1.0, worseWhen:"higher" },
+    { key:"natura", name:"Натура, г/л",         norm:750,fact:750,rate:0.05,worseWhen:"lower"  },
+    { key:"kleyk",  name:"Клейковина, %",       norm:23, fact:23, rate:1.0, worseWhen:"lower"  },
+    { key:"protein",name:"Протеин, %",          norm:12.5,fact:12.5,rate:1.0,worseWhen:"lower" },
+  ]},
+  "Ячмень": { base: 14000, params: [
+    { key:"vlaga",  name:"Влажность, %",        norm:14, fact:14, rate:1.0, worseWhen:"higher" },
+    { key:"sor",    name:"Сорная примесь, %",   norm:2,  fact:2,  rate:1.0, worseWhen:"higher" },
+    { key:"natura", name:"Натура, г/л",         norm:630,fact:630,rate:0.05,worseWhen:"lower"  },
+    { key:"protein",name:"Протеин, %",          norm:11, fact:11, rate:0.8, worseWhen:"lower"  },
+  ]},
+  "Кукуруза": { base: 13500, params: [
+    { key:"vlaga",  name:"Влажность, %",        norm:14, fact:14, rate:1.0, worseWhen:"higher" },
+    { key:"sor",    name:"Сорная примесь, %",   norm:2,  fact:2,  rate:1.0, worseWhen:"higher" },
+    { key:"zern",   name:"Зерновая примесь, %", norm:5,  fact:5,  rate:0.5, worseWhen:"higher" },
+  ]},
+  "Соя": { base: 38000, params: [
+    { key:"vlaga",  name:"Влажность, %",        norm:12, fact:12, rate:1.5, worseWhen:"higher" },
+    { key:"sor",    name:"Сорная примесь, %",   norm:2,  fact:2,  rate:1.0, worseWhen:"higher" },
+    { key:"protein",name:"Протеин, %",          norm:36, fact:36, rate:1.0, worseWhen:"lower"  },
+    { key:"maslo",  name:"Масличность, %",      norm:20, fact:20, rate:1.0, worseWhen:"lower"  },
+  ]},
+  "Рапс": { base: 42000, params: [
+    { key:"vlaga",  name:"Влажность, %",        norm:8,  fact:8,  rate:1.5, worseWhen:"higher" },
+    { key:"sor",    name:"Сорная примесь, %",   norm:2,  fact:2,  rate:1.0, worseWhen:"higher" },
+    { key:"maslo",  name:"Масличность, %",      norm:42, fact:42, rate:1.5, worseWhen:"lower"  },
+  ]},
+};
+
+/* ============================================================
+   ЯДРО РАСЧЁТА СЪЁМА (исправленное)
+
+   --- БЫЛО (баг): знак разницы определял всё ---
+   // const dev   = p.fact - p.norm;
+   // const snyom = dev * p.rate;        // для 'lower' давал ОТРИЦАТЕЛЬНЫЙ съём
+   // price = price - snyom;             // минус на минус → НАДБАВКА за плохое зерно
+
+   --- СТАЛО: съём от модуля отклонения в худшую сторону, всегда ≥ 0 ---
+   ============================================================ */
+function snyomFor(p){
+  let dev;
+  if (p.worseWhen === "higher") {
+    dev = Math.max(0, p.fact - p.norm);   // хуже, когда факт ВЫШЕ нормы
+  } else { // 'lower'
+    dev = Math.max(0, p.norm - p.fact);   // хуже, когда факт НИЖЕ нормы
+  }
+  const snyom = dev * p.rate;             // % от цены, всегда ≥ 0
+  return { dev, snyom };
+}
+
+let current = "Подсолнечник";
+
+function buildCropSelect(){
+  const sel = document.getElementById("crop");
+  sel.innerHTML = "";
+  Object.keys(CROPS).forEach(name=>{
+    const o = document.createElement("option");
+    o.value = name; o.textContent = name;
+    sel.appendChild(o);
+  });
+  sel.value = current;
+  sel.onchange = ()=>{ current = sel.value; document.getElementById("basePrice").value = CROPS[current].base; render(); };
+}
+
+function render(){
+  const crop = CROPS[current];
+  const base = parseFloat(document.getElementById("basePrice").value) || 0;
+  const tbody = document.getElementById("rows");
+  tbody.innerHTML = "";
+  let totalPct = 0;
+
+  crop.params.forEach((p, idx)=>{
+    const { dev, snyom } = snyomFor(p);
+    totalPct += snyom;
+
+    const tr = document.createElement("tr");
+    const dir = p.worseWhen === "higher"
+      ? `<span class="chip hi">больше → хуже</span>`
+      : `<span class="chip lo">меньше → хуже</span>`;
+    const snClass = snyom > 0 ? "snyom pos" : "snyom zero";
+    tr.innerHTML = `
+      <td class="name">${p.name}</td>
+      <td>${dir}</td>
+      <td><input class="miniin" type="number" step="0.1" data-i="${idx}" data-f="norm" value="${p.norm}"></td>
+      <td><input class="miniin" type="number" step="0.1" data-i="${idx}" data-f="fact" value="${p.fact}"></td>
+      <td><input class="miniin" type="number" step="0.05" data-i="${idx}" data-f="rate" value="${p.rate}"></td>
+      <td>${dev>0 ? dev.toFixed(2) : "—"}</td>
+      <td class="${snClass}">${snyom>0 ? "−"+snyom.toFixed(2)+"%" : "0"}</td>`;
+    tbody.appendChild(tr);
+  });
+
+  // live-правки нормы/факта/ставки
+  tbody.querySelectorAll("input").forEach(inp=>{
+    inp.oninput = ()=>{
+      const i = +inp.dataset.i, f = inp.dataset.f;
+      crop.params[i][f] = parseFloat(inp.value);
+      render();
+    };
+  });
+
+  const final = base * (1 - totalPct/100);
+  const snyomRub = base - final;
+
+  document.getElementById("oBase").textContent = base.toLocaleString("ru-RU") + " ₽";
+  document.getElementById("oSnyomPct").textContent = totalPct>0 ? "−"+totalPct.toFixed(2)+" %" : "0 %";
+  document.getElementById("oSnyomRub").textContent = (snyomRub>0?"−":"") + Math.round(snyomRub).toLocaleString("ru-RU") + " ₽";
+
+  const oFinal = document.getElementById("oFinal");
+  oFinal.textContent = Math.round(final).toLocaleString("ru-RU") + " ₽/т";
+  oFinal.className = totalPct>0 ? "big down" : "big eq";
+  document.getElementById("oVerdict").textContent = totalPct>0
+    ? `ниже базовой на ${Math.round(snyomRub).toLocaleString("ru-RU")} ₽`
+    : "качество в норме — цена = базовой";
+}
+
+buildCropSelect();
+document.getElementById("basePrice").oninput = render;
+render();
+</script>
+</body>
+</html>

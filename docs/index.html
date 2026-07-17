@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Помощник по документам на зерно — чек-лист, цены, сроки и готовые бланки</title>
+<meta name="description" content="Подскажет, какие документы нужны на партию зерна, куда идти, сколько стоит и сколько ждать. Соберёт готовый пакет .docx на бланках ЦОК АПК. Telegram-бот и веб-версия.">
+<meta property="og:title" content="Помощник по документам на зерно">
+<meta property="og:description" content="Чек-лист документов на партию зерна с ценами и сроками + сборка готового пакета на бланках ЦОК АПК. В Telegram и в браузере.">
+<meta property="og:type" content="website">
+<script>(function(){var d=document.documentElement;d.classList.add('js');var t;try{t=localStorage.getItem('zerno-theme')}catch(e){}if(!t)t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';d.setAttribute('data-theme',t);})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.7.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --navy:#13401f;--navy2:#235c33;--blue:#3f8b46;--blue-d:#2f7d3e;
+  --sky:#2aa6e0;--tg:#229ED9;
+  --gold:#e3a93b;--gold-d:#c4892a;--amber:#e0852e;
+  --red:#d2483c;--red-d:#b23a30;
+  --green:#1f9d6b;--green-d:#178a5d;--violet:#7a5bb5;
+  --cream:#faf7f0;--cream2:#f2ede2;--card:#ffffff;
+  --ink:#15171c;--ink2:#4c4f57;--muted:#8a8d96;--line:#e8e3d6;
+  --font:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --display:"Unbounded",var(--font);
+  --shadow:0 18px 50px rgba(20,64,30,.14);--shadow-sm:0 8px 26px rgba(20,64,30,.09);
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px;position:relative;z-index:2}
+.section{padding:96px 0;position:relative;overflow:hidden}
+@media(max-width:640px){.section{padding:60px 0}}
+
+/* грейн-текстура + прогресс скролла */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:9998;opacity:.05;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;background:linear-gradient(90deg,var(--gold),var(--sky),var(--green));box-shadow:0 0 12px rgba(42,166,224,.6)}
+
+/* aurora-пятна */
+.aurora{position:absolute;border-radius:50%;filter:blur(70px);opacity:.55;z-index:0;pointer-events:none;will-change:transform}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(38px,-34px) scale(1.12)}100%{transform:translate(0,0) scale(1)}}
+
+/* зерновой мотив */
+.wheat{position:absolute;pointer-events:none;fill:none;stroke:currentColor;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;z-index:1;transform:rotate(var(--r,0deg)) translateY(var(--shift,0px));transition:transform .12s linear}
+
+/* reveal */
+.js .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.js .reveal.in{opacity:1;transform:none}
+.js .stagger>*{opacity:0;transform:translateY(26px);transition:opacity .65s var(--ease),transform .65s var(--ease)}
+.js .stagger.in>*{opacity:1;transform:none}
+.js .stagger.in>*:nth-child(1){transition-delay:.04s}
+.js .stagger.in>*:nth-child(2){transition-delay:.12s}
+.js .stagger.in>*:nth-child(3){transition-delay:.20s}
+.js .stagger.in>*:nth-child(4){transition-delay:.28s}
+.js .stagger.in>*:nth-child(5){transition-delay:.36s}
+.js .stagger.in>*:nth-child(6){transition-delay:.44s}
+.js .stagger.in>*:nth-child(7){transition-delay:.52s}
+@media(prefers-reduced-motion:reduce){
+  .js .reveal,.js .stagger>*{opacity:1!important;transform:none!important;transition:none}
+  .aurora,.wheat{animation:none}
+}
+
+/* ===== тёмная тема ===== */
+:root{--spot:rgba(63,139,70,.12)}
+[data-theme="dark"]{
+  --cream:#0f1b2e;--cream2:#0b1525;--card:#15243a;
+  --ink:#eef2f8;--ink2:#aeb8c8;--muted:#7e8a9c;--line:#27364e;
+  --shadow:0 18px 50px rgba(0,0,0,.5);--shadow-sm:0 10px 28px rgba(0,0,0,.4);
+  --spot:rgba(255,255,255,.10);
+}
+[data-theme="dark"] .nav{background:rgba(15,27,46,.74);border-bottom-color:rgba(39,54,78,.85)}
+[data-theme="dark"] .nav .links a.l:hover{background:rgba(255,255,255,.06)}
+[data-theme="dark"] .nav .links a.l.active{color:#cfe0f5;background:rgba(42,166,224,.16)}
+[data-theme="dark"] .dl{background:linear-gradient(120deg,#162439,#23200f);border-color:#4a3f1f}
+[data-theme="dark"] .tag{background:#1a2840}
+[data-theme="dark"] .tag.price{background:#123026;color:#5fd6a3}
+[data-theme="dark"] .tag.term{background:#122a40;color:#7cc0ee}
+
+/* ===== кнопка темы ===== */
+.themebtn{width:42px;height:42px;border-radius:11px;border:1px solid var(--line);background:var(--card);color:var(--ink2);font-size:19px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s var(--ease),color .2s,background .2s}
+.themebtn:hover{transform:translateY(-2px);color:var(--ink)}
+
+/* ===== spotlight + 3D-tilt ===== */
+.pcard,.scard,.hc,.fc,.stat{position:relative}
+.stat{--spot:rgba(255,255,255,.14)}
+.fc{--spot:rgba(255,255,255,.16)}
+.pcard>*,.scard>*,.hc>*,.fc>*{position:relative;z-index:2}
+.pcard::after,.scard::after,.hc::after,.fc::after,.stat::after{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(250px circle at var(--mx,50%) var(--my,50%),var(--spot),transparent 65%);opacity:0;transition:opacity .3s;pointer-events:none;z-index:1}
+.pcard:hover::after,.scard:hover::after,.hc:hover::after,.fc:hover::after,.stat:hover::after{opacity:1}
+
+/* kicker / headings */
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:8px 15px;border-radius:30px}
+.h2{font-size:clamp(29px,4.4vw,48px);font-weight:800;letter-spacing:-.03em;line-height:1.05;margin:18px 0 0}
+.h2 .g{background:linear-gradient(100deg,var(--gold),var(--amber));-webkit-background-clip:text;background-clip:text;color:transparent}
+.h2sub{font-size:clamp(15px,1.6vw,18px);color:var(--ink2);margin:18px 0 0;max-width:62ch}
+.center{text-align:center}.center .h2sub{margin-left:auto;margin-right:auto}.center .kicker{justify-content:center}
+
+/* buttons */
+.btn{position:relative;display:inline-flex;align-items:center;gap:9px;text-decoration:none;border-radius:14px;padding:15px 26px;font-size:16px;font-weight:700;border:2px solid transparent;cursor:pointer;transition:transform .12s var(--ease),box-shadow .2s ease,background .2s ease;overflow:hidden}
+.btn:hover{transform:translateY(-3px)}
+.btn-tg{background:linear-gradient(135deg,#3bb6ea,#1c8fc9);color:#fff;box-shadow:0 14px 34px rgba(34,158,217,.5)}
+.btn-tg:hover{box-shadow:0 20px 46px rgba(34,158,217,.62)}
+.btn-tg::after{content:"";position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.4),transparent);transition:left .5s ease}
+.btn-tg:hover::after{left:140%}
+.btn-glass{background:rgba(255,255,255,.10);color:#fff;border-color:rgba(255,255,255,.32);backdrop-filter:blur(8px)}
+.btn-glass:hover{background:rgba(255,255,255,.2)}
+
+/* ============ NAV ============ */
+.nav{position:sticky;top:0;z-index:50;background:rgba(250,247,240,.72);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid rgba(232,227,214,.8);transition:box-shadow .3s ease}
+.nav.scrolled{box-shadow:0 6px 24px rgba(20,64,30,.07)}
+.nav .row{display:flex;align-items:center;justify-content:space-between;height:66px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:16px;text-decoration:none;color:var(--ink)}
+.brand .logo{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#fff;font-size:20px;box-shadow:0 6px 16px rgba(196,137,42,.45)}
+.nav .links{display:flex;align-items:center;gap:8px}
+.nav .links a.l{position:relative;font-size:14.5px;font-weight:600;color:var(--ink2);text-decoration:none;padding:8px 14px;border-radius:10px;transition:color .2s,background .2s}
+.nav .links a.l:hover{color:var(--ink);background:rgba(20,64,30,.05)}
+.nav .links a.l.active{color:var(--navy);background:rgba(63,139,70,.10)}
+.nav .nbtn{display:inline-flex;align-items:center;gap:7px;background:linear-gradient(135deg,#3bb6ea,#1c8fc9);color:#fff;text-decoration:none;font-size:14px;font-weight:700;padding:11px 18px;border-radius:11px;box-shadow:0 10px 24px rgba(34,158,217,.42);margin-left:8px}
+.nav .nbtn:hover{transform:translateY(-2px)}
+@media(max-width:780px){.nav .links a.l{display:none}.nav .nbtn .tx{display:none}.nav .nbtn{padding:11px 13px}}
+
+/* ============ HERO ============ */
+.hero{position:relative;overflow:hidden;color:#fff;background:linear-gradient(165deg,#1a4d28 0%,#13401f 55%,#0f2e18 100%)}
+.hero .a1{width:560px;height:560px;background:radial-gradient(circle,rgba(227,169,59,.6),transparent 65%);top:-200px;right:-120px;animation:drift 16s ease-in-out infinite}
+.hero .a2{width:520px;height:520px;background:radial-gradient(circle,rgba(42,166,224,.55),transparent 65%);bottom:-220px;left:-140px;animation:drift 20s ease-in-out infinite reverse}
+.hero .a3{width:360px;height:360px;background:radial-gradient(circle,rgba(31,157,107,.4),transparent 65%);top:30%;left:42%;animation:drift 24s ease-in-out infinite}
+.hero .wrap{padding:104px 22px 108px}
+.hero .kicker{background:rgba(255,255,255,.10);color:#ffe6b8;border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px)}
+.hero h1{font-family:var(--display);font-size:clamp(36px,6.2vw,72px);font-weight:800;line-height:1.02;letter-spacing:-.02em;margin:24px 0 0;max-width:15ch}
+.hero h1 .g{background:linear-gradient(100deg,#ffd277,#e3a93b,#ffcf6b);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 6s linear infinite}
+@keyframes shimmer{to{background-position:200% center}}
+.hero .lead{font-size:clamp(16px,2vw,20px);color:#c9d6e6;margin:24px 0 0;max-width:56ch}
+.hero .lead b{color:#fff}
+.actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:36px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:52px}
+@media(max-width:680px){.stats{grid-template-columns:1fr 1fr}}
+.stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.13);border-radius:18px;padding:20px 22px;backdrop-filter:blur(6px);transition:transform .2s var(--ease),background .2s}
+.stat:hover{transform:translateY(-4px);background:rgba(255,255,255,.1)}
+.stat .n{font-family:var(--display);font-size:36px;font-weight:800;line-height:1;background:linear-gradient(120deg,#ffd277,#e3a93b);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .t{font-size:13.5px;color:#aebed2;margin-top:10px}
+.wh-h1{top:-30px;right:-20px;width:230px;height:480px;color:#e3a93b;opacity:.20;--r:14deg}
+.wh-h2{bottom:-70px;left:-50px;width:200px;height:417px;color:#2aa6e0;opacity:.16;--r:-22deg}
+@media(max-width:640px){.wh-h1{width:150px;height:312px}}
+
+/* ============ PROBLEM ============ */
+.s-prob{background:var(--cream)}
+.s-prob .kicker{background:#fae3df;color:var(--red-d)}
+.prob{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:46px}
+@media(max-width:820px){.prob{grid-template-columns:1fr}}
+.pcard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:32px 28px;box-shadow:var(--shadow-sm);overflow:hidden;transition:transform .25s var(--ease),box-shadow .25s}
+.pcard:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.pcard::before{content:"";position:absolute;top:0;left:0;right:0;height:5px}
+.pcard.c1::before{background:linear-gradient(90deg,#d2483c,#e0852e)}
+.pcard.c2::before{background:linear-gradient(90deg,#e0852e,#e3a93b)}
+.pcard.c3::before{background:linear-gradient(90deg,#3f8b46,#2aa6e0)}
+.pcard .pic{width:62px;height:62px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:29px;color:#fff;margin-bottom:18px}
+.pcard.c1 .pic{background:linear-gradient(135deg,#d2483c,#b23a30);box-shadow:0 10px 22px rgba(210,72,60,.35)}
+.pcard.c2 .pic{background:linear-gradient(135deg,#e0852e,#c4892a);box-shadow:0 10px 22px rgba(224,133,46,.35)}
+.pcard.c3 .pic{background:linear-gradient(135deg,#3f8b46,#2f7d3e);box-shadow:0 10px 22px rgba(63,139,70,.35)}
+.pcard h4{font-size:19px;font-weight:700;margin:0 0 8px}
+.pcard p{font-size:14.5px;color:var(--ink2);margin:0}
+
+/* ============ SERVICES ============ */
+.s-serv{background:var(--cream2)}
+.s-serv .a1{width:480px;height:480px;background:radial-gradient(circle,rgba(227,169,59,.22),transparent 65%);top:-120px;right:-120px}
+.s-serv .a2{width:440px;height:440px;background:radial-gradient(circle,rgba(31,157,107,.18),transparent 65%);bottom:-160px;left:-160px}
+.s-serv .kicker{background:#e7f3ea;color:var(--blue-d)}
+.flow{margin-top:50px;position:relative}
+.flow::before{content:"";position:absolute;left:33px;top:34px;bottom:34px;width:3px;border-radius:3px;background:linear-gradient(var(--gold),var(--blue),var(--green))}
+@media(max-width:640px){.flow::before{left:25px}}
+.step{position:relative;display:grid;grid-template-columns:70px 1fr;gap:24px;padding:13px 0}
+@media(max-width:640px){.step{grid-template-columns:52px 1fr;gap:15px}}
+.node{position:relative;z-index:2;width:70px;height:70px;border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;box-shadow:0 12px 28px rgba(20,64,30,.22)}
+@media(max-width:640px){.node{width:52px;height:52px;font-size:23px;border-radius:16px}}
+.scard{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px 28px;box-shadow:var(--shadow-sm);transition:transform .22s var(--ease),box-shadow .22s}
+.scard:hover{transform:translateX(6px);box-shadow:var(--shadow)}
+.scard::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:5px;border-radius:5px}
+.stop{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.scard h3{font-size:20px;font-weight:700;margin:0;letter-spacing:-.01em}
+.chip{font-size:12px;font-weight:700;padding:5px 13px;border-radius:30px;white-space:nowrap}
+.org{font-size:13px;color:var(--muted);font-weight:600;display:inline-flex;align-items:center;gap:5px;margin-left:auto}
+.scard .desc{font-size:15px;color:var(--ink2);margin:12px 0 0}
+.meta{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:16px}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;padding:7px 13px;border-radius:11px;background:var(--cream2);color:var(--ink2)}
+.tag i{font-size:15px}
+.tag.price{background:#eef7f1;color:var(--green-d)}
+.tag.term{background:#eaf3fb;color:var(--blue-d)}
+.req .node{background:linear-gradient(135deg,#d2483c,#b23a30)}.req.scard::before{background:#d2483c}.req .chip{background:#fae3df;color:var(--red-d)}
+.rec .node{background:linear-gradient(135deg,#3f8b46,#2f7d3e)}.rec.scard::before{background:#3f8b46}.rec .chip{background:#e7f3ea;color:var(--blue-d)}
+.chk .node{background:linear-gradient(135deg,#e3a93b,#c4892a)}.chk.scard::before{background:#e3a93b}.chk .chip{background:#fbf0d6;color:var(--gold-d)}
+.opt .node{background:linear-gradient(135deg,#1f9d6b,#178a5d)}.opt.scard::before{background:#1f9d6b}.opt .chip{background:#e3f4ec;color:var(--green-d)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:32px;font-size:13.5px;font-weight:600;color:var(--ink2)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.dot{width:12px;height:12px;border-radius:50%}
+.note{font-size:13px;color:var(--muted);margin-top:20px;line-height:1.55}
+
+/* ============ CAPABILITIES (bento, тёмный) ============ */
+.s-cap{position:relative;overflow:hidden;color:#fff;background:linear-gradient(165deg,#235c33,#13401f)}
+.s-cap .a1{width:540px;height:540px;background:radial-gradient(circle,rgba(122,91,181,.4),transparent 65%);top:-180px;left:-120px;animation:drift 22s ease-in-out infinite}
+.s-cap .a2{width:480px;height:480px;background:radial-gradient(circle,rgba(42,166,224,.34),transparent 65%);bottom:-180px;right:-120px;animation:drift 26s ease-in-out infinite reverse}
+.s-cap .kicker{background:rgba(255,255,255,.12);color:#ffe6b8;border:1px solid rgba(255,255,255,.18)}
+.s-cap .h2{color:#fff}.s-cap .h2sub{color:#b9c6da}
+.feat{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:50px}
+@media(max-width:720px){.feat{grid-template-columns:1fr}}
+.fc{position:relative;border-radius:24px;padding:30px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);overflow:hidden;transition:transform .25s var(--ease),background .25s,box-shadow .25s}
+.fc::before{content:"";position:absolute;inset:0;border-radius:24px;padding:1px;background:linear-gradient(135deg,rgba(255,255,255,.35),transparent 45%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.5}
+.fc:hover{transform:translateY(-6px);background:rgba(255,255,255,.085)}
+.fc.f1:hover{box-shadow:0 20px 50px rgba(42,166,224,.28)}
+.fc.f2:hover{box-shadow:0 20px 50px rgba(31,157,107,.28)}
+.fc.f3:hover{box-shadow:0 20px 50px rgba(122,91,181,.3)}
+.fc.f4:hover{box-shadow:0 20px 50px rgba(227,169,59,.28)}
+.fc .ic{width:58px;height:58px;border-radius:17px;display:flex;align-items:center;justify-content:center;font-size:29px;color:#fff;box-shadow:0 10px 24px rgba(0,0,0,.28)}
+.fc.f1 .ic{background:linear-gradient(135deg,#2aa6e0,#3f8b46)}
+.fc.f2 .ic{background:linear-gradient(135deg,#1f9d6b,#178a5d)}
+.fc.f3 .ic{background:linear-gradient(135deg,#7a5bb5,#5d3f96)}
+.fc.f4 .ic{background:linear-gradient(135deg,#e3a93b,#c4892a)}
+.fc h3{font-size:21px;font-weight:700;margin:18px 0 8px}
+.fc p{font-size:14.5px;color:#aebed2;margin:0}
+.fc ul{margin:14px 0 0;padding:0;list-style:none}
+.fc li{font-size:14px;color:#c9d6e6;padding:5px 0 5px 26px;position:relative}
+.fc li::before{content:"\ea5e";font-family:"tabler-icons";position:absolute;left:0;top:5px;font-size:15px}
+.fc.f1 li::before{color:#2aa6e0}.fc.f2 li::before{color:#1f9d6b}.fc.f3 li::before{color:#a98ad6}.fc.f4 li::before{color:#e3a93b}
+
+/* ============ CHANNELS ============ */
+.s-chan{background:var(--cream)}
+.chan{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:50px}
+@media(max-width:680px){.chan{grid-template-columns:1fr}}
+.ch{position:relative;overflow:hidden;display:flex;flex-direction:column;gap:11px;text-decoration:none;border-radius:26px;padding:40px 36px;color:#fff;transition:transform .25s var(--ease),box-shadow .25s;box-shadow:var(--shadow)}
+.ch:hover{transform:translateY(-7px)}
+.ch.tg{background:linear-gradient(150deg,#3bb6ea,#1c8fc9)}.ch.tg:hover{box-shadow:0 28px 60px rgba(34,158,217,.42)}
+.ch.web{background:linear-gradient(150deg,#2f6e3b,#1a4d28)}.ch.web:hover{box-shadow:0 28px 60px rgba(20,64,30,.4)}
+.ch .ic{width:64px;height:64px;border-radius:19px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:33px;margin-bottom:6px}
+.ch .name{font-size:25px;font-weight:800}
+.ch .d{font-size:15px;color:rgba(255,255,255,.92);line-height:1.5}
+.ch .go{margin-top:auto;padding-top:14px;font-size:15.5px;font-weight:700;display:inline-flex;align-items:center;gap:7px}
+.ch .blob{position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.12);right:-80px;top:-80px;transition:transform .35s var(--ease)}
+.ch:hover .blob{transform:scale(1.25)}
+
+/* ============ HOW ============ */
+.s-how{background:var(--cream2)}
+.s-how .kicker{background:#e3f4ec;color:var(--green-d)}
+.how{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:50px}
+@media(max-width:820px){.how{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.how{grid-template-columns:1fr}}
+.hc{position:relative;background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px 24px;box-shadow:var(--shadow-sm);transition:transform .22s var(--ease),box-shadow .22s}
+.hc:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.hc .n{font-family:var(--display);width:50px;height:50px;border-radius:15px;color:#fff;font-size:21px;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm)}
+.hc.s1 .n{background:linear-gradient(135deg,#2aa6e0,#3f8b46)}
+.hc.s2 .n{background:linear-gradient(135deg,#7a5bb5,#5d3f96)}
+.hc.s3 .n{background:linear-gradient(135deg,#e0852e,#c4892a)}
+.hc.s4 .n{background:linear-gradient(135deg,#1f9d6b,#178a5d)}
+.hc h4{font-size:17px;font-weight:700;margin:16px 0 6px}
+.hc p{font-size:14px;color:var(--ink2);margin:0}
+.dl{display:flex;align-items:center;gap:18px;background:linear-gradient(120deg,#fff,#fbf3e0);border:1px solid #ecdcb6;border-radius:22px;padding:26px 28px;margin-top:36px;text-decoration:none;color:inherit;box-shadow:var(--shadow-sm);transition:transform .22s var(--ease),box-shadow .22s}
+.dl:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.dl .ic{width:60px;height:60px;border-radius:17px;background:linear-gradient(135deg,#e3a93b,#c4892a);display:flex;align-items:center;justify-content:center;font-size:29px;color:#fff;flex:0 0 auto;box-shadow:0 10px 24px rgba(196,137,42,.42)}
+.dl .t{font-size:17px;font-weight:700}
+.dl .d{font-size:14px;color:var(--ink2);margin-top:3px}
+.dl .arr{margin-left:auto;color:var(--gold-d);font-size:27px}
+
+/* ============ CTA ============ */
+.s-cta{padding:84px 0}
+.cta{position:relative;overflow:hidden;border-radius:34px;padding:70px 44px;text-align:center;color:#fff;background:linear-gradient(150deg,#235c33,#13401f)}
+.cta .a1{width:520px;height:520px;background:radial-gradient(circle,rgba(227,169,59,.5),transparent 65%);top:-220px;right:-100px;animation:drift 18s ease-in-out infinite}
+.cta .a2{width:480px;height:480px;background:radial-gradient(circle,rgba(42,166,224,.42),transparent 65%);bottom:-240px;left:-90px;animation:drift 22s ease-in-out infinite reverse}
+.cta h2{font-family:var(--display);font-size:clamp(28px,4.2vw,46px);font-weight:800;margin:0;letter-spacing:-.02em;line-height:1.06}
+.cta p{font-size:clamp(15px,1.7vw,18px);color:#c9d6e6;margin:20px auto 0;max-width:54ch}
+.cta .actions{justify-content:center;margin-top:36px}
+.wh-c1{top:-30px;left:-20px;width:150px;height:312px;color:#e3a93b;opacity:.2;--r:-16deg}
+.wh-c2{bottom:-60px;right:-26px;width:175px;height:365px;color:#2aa6e0;opacity:.18;--r:165deg}
+
+/* ============ FOOTER ============ */
+footer{background:#0f2e18;color:#9fb0c6;padding:48px 0 52px}
+.foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:18px;align-items:center}
+.foot .l{display:flex;align-items:center;gap:11px;font-size:15px;font-weight:600;color:#dfe7f1}
+.foot .l .logo{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--gold),var(--gold-d));display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px}
+.foot .r{display:flex;gap:24px;font-size:14.5px;font-weight:600}
+.foot .r a{color:#9fb0c6;text-decoration:none}.foot .r a:hover{color:#fff}
+.disc{font-size:12.5px;color:#6f819a;margin-top:24px;line-height:1.6;border-top:1px solid rgba(255,255,255,.08);padding-top:22px}
+
+/* ===== доп. секции v2 (схема / смета / показатели / образцы / FAQ / реестр) ===== */
+.picker{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:var(--shadow-sm);margin-top:44px}
+.pq{margin-bottom:22px}
+.pq .lb{font-size:14.5px;font-weight:700;color:var(--ink2);margin-bottom:11px}
+.pseg{display:flex;flex-wrap:wrap;gap:10px}
+.pseg button{border:2px solid var(--line);background:transparent;color:var(--ink2);border-radius:13px;padding:11px 18px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:border-color .15s var(--ease),background .15s,color .15s}
+.pseg button:hover{border-color:var(--blue)}
+.pseg button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.schres{margin-top:8px;background:linear-gradient(135deg,#fbf3e0,#fff);border:1px solid #ecdcb6;border-radius:18px;padding:24px 26px}
+[data-theme="dark"] .schres{background:linear-gradient(135deg,#23200f,#162439);border-color:#4a3f1f}
+.schres .code{font-family:var(--display);font-size:32px;font-weight:800;color:var(--gold-d)}
+[data-theme="dark"] .schres .code{color:#ffd277}
+.schres .tm{font-size:15px;color:var(--ink2);margin-top:6px}
+.schres .hint{font-size:13px;color:var(--muted);margin-top:12px}
+
+.estbox{background:var(--card);border:1px solid var(--line);border-radius:22px;overflow:hidden;box-shadow:var(--shadow-sm);margin-top:44px}
+.estbox .eh{background:linear-gradient(135deg,var(--navy2),var(--navy));color:#fff;padding:18px 26px;font-size:15px;font-weight:700}
+.estbox .eb{padding:8px 26px 22px}
+.erow{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:14px 0;border-bottom:1px dashed var(--line);font-size:15px}
+.erow:last-of-type{border-bottom:0}
+.erow .nm{font-weight:600;color:var(--ink)}
+.erow .pr{color:var(--ink2);white-space:nowrap;font-weight:600}
+.etot{display:flex;justify-content:space-between;gap:14px;padding-top:16px;margin-top:6px;border-top:2px solid var(--line);font-size:17px;font-weight:800}
+.etot .v{color:var(--green-d)}
+.mini{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-left:8px;vertical-align:middle;white-space:nowrap}
+.mini.r{background:#fae3df;color:var(--red-d)}.mini.b{background:#e7f3ea;color:var(--blue-d)}
+
+.labsel{margin-top:44px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:var(--shadow-sm)}
+.labsel select{height:48px;width:100%;max-width:360px;border:2px solid var(--line);border-radius:13px;background:var(--cream);color:var(--ink);padding:0 14px;font-size:15px;font-weight:600;font-family:inherit}
+.labcols{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:24px}
+@media(max-width:680px){.labcols{grid-template-columns:1fr}}
+.labcols h4{font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--blue-d);margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.labcols ul{margin:0;padding:0;list-style:none}
+.labcols li{font-size:14.5px;color:var(--ink2);padding:8px 0 8px 26px;position:relative;border-bottom:1px solid var(--line)}
+.labcols li:last-child{border-bottom:0}
+.labcols li::before{content:"\ea5e";font-family:"tabler-icons";position:absolute;left:0;top:8px;font-size:14px;color:var(--green)}
+
+.faqx{margin-top:44px;max-width:840px}
+.faqx details{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:12px;padding:0 24px;transition:border-color .2s,box-shadow .2s}
+.faqx details[open]{border-color:var(--blue);box-shadow:var(--shadow-sm)}
+.faqx summary{cursor:pointer;font-size:16px;font-weight:700;padding:20px 0;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px;color:var(--ink)}
+.faqx summary::-webkit-details-marker{display:none}
+.faqx summary .pl{width:30px;height:30px;flex:0 0 auto;border-radius:9px;background:var(--cream2);color:var(--blue-d);display:flex;align-items:center;justify-content:center;font-size:22px;line-height:1;transition:transform .2s}
+.faqx details[open] summary .pl{transform:rotate(45deg)}
+.faqx .ans{font-size:15px;color:var(--ink2);padding:0 0 22px;line-height:1.65}
+.faqx .ans b{color:var(--ink);font-weight:700}
+
+.samp{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:46px}
+@media(max-width:760px){.samp{grid-template-columns:1fr}}
+.spc{background:var(--card);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:var(--shadow-sm);transition:transform .22s var(--ease),box-shadow .22s}
+.spc:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
+.spc .pv{aspect-ratio:3/4;background:linear-gradient(150deg,var(--cream2),var(--cream));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;color:var(--muted);border-bottom:1px solid var(--line);overflow:hidden}
+.spc .pv i{font-size:48px;color:var(--gold-d);opacity:.75}
+.spc .pv span{font-size:12px}
+.spc .pv img{width:100%;height:100%;object-fit:cover;object-position:top center;display:block;transition:transform .4s var(--ease)}
+.spc:hover .pv img{transform:scale(1.04)}
+.spc .cap{padding:16px 18px;font-size:15px;font-weight:700}
+
+.reg{display:flex;align-items:center;gap:26px;flex-wrap:wrap;background:linear-gradient(135deg,#1a4d28,#13401f);color:#fff;border-radius:26px;padding:38px;margin-top:46px;box-shadow:var(--shadow)}
+.reg .ic{width:72px;height:72px;border-radius:20px;background:rgba(255,255,255,.14);display:flex;align-items:center;justify-content:center;font-size:36px;flex:0 0 auto}
+.reg .tx{flex:1;min-width:240px}
+.reg .tx h3{font-size:22px;font-weight:800;margin:0 0 8px}
+.reg .tx p{font-size:15px;color:#c9d6e6;margin:0}
+
+/* на мобильном веб-версию оставляем ОДНОЙ кнопкой в hero; дубли (каналы, финальный CTA) скрываем */
+@media(max-width:760px){
+  .s-cta a.btn-glass[href="app"], .ch.web{display:none!important}
+}
+
+/* ===== третья тема: бухгалтерская «гроссбух» (сине-серый) ===== */
+/* навигейви #203a5e (а не #235c33) — чтобы не попасть под фермерскую замену цветов */
+[data-theme="ledger"]{
+  --cream:#f4f6f9;--cream2:#e9edf2;--card:#ffffff;
+  --ink:#1b2330;--ink2:#4a5564;--muted:#7a8595;--line:#dde3ea;
+  --navy:#16273f;--navy2:#203a5e;--blue:#2f6fb0;--blue-d:#2563a8;
+  --shadow:0 14px 40px rgba(31,58,95,.14);--shadow-sm:0 6px 20px rgba(31,58,95,.09);
+  --spot:rgba(31,58,95,.10);
+}
+[data-theme="ledger"] .hero{background:linear-gradient(165deg,#2a4a6e 0%,#203a5e 55%,#16273f 100%)}
+[data-theme="ledger"] .s-cap{background:linear-gradient(165deg,#203a5e,#16273f)}
+[data-theme="ledger"] .cta{background:linear-gradient(150deg,#203a5e,#16273f)}
+[data-theme="ledger"] .ch.web{background:linear-gradient(150deg,#3a5577,#203a5e)}
+[data-theme="ledger"] footer{background:#13202f}
+[data-theme="ledger"] .reg{background:linear-gradient(135deg,#203a5e,#16273f)}
+[data-theme="ledger"] .s-serv .kicker,[data-theme="ledger"] .s-how .kicker{background:#e7edf6;color:#2563a8}
+[data-theme="ledger"] .nav{background:rgba(244,246,249,.82);border-bottom-color:rgba(221,227,234,.9)}
+[data-theme="ledger"] .nav .links a.l.active{color:#203a5e;background:rgba(37,99,168,.10)}
+
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="progress" id="prog"></div>
+
+<!-- SVG-символ: колос -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="wheat" viewBox="0 0 120 250">
+      <path d="M60 248 C58 215 57 195 60 172"/>
+      <path d="M60 70 L60 16"/><path d="M60 66 L44 22"/><path d="M60 66 L76 22"/>
+      <path d="M60 64 L34 34"/><path d="M60 64 L86 34"/>
+      <path d="M60 92 C68 82 68 62 60 54 C52 62 52 82 60 92 Z"/>
+      <g transform="translate(47,104) rotate(-30)"><path d="M0 -15 C8 -6 8 6 0 15 C-8 6 -8 -6 0 -15 Z"/></g>
+      <g transform="translate(73,104) rotate(30)"><path d="M0 -15 C8 -6 8 6 0 15 C-8 6 -8 -6 0 -15 Z"/></g>
+      <g transform="translate(46,126) rotate(-30)"><path d="M0 -15 C8 -6 8 6 0 15 C-8 6 -8 -6 0 -15 Z"/></g>
+      <g transform="translate(74,126) rotate(30)"><path d="M0 -15 C8 -6 8 6 0 15 C-8 6 -8 -6 0 -15 Z"/></g>
+      <g transform="translate(46,148) rotate(-30)"><path d="M0 -15 C8 -6 8 6 0 15 C-8 6 -8 -6 0 -15 Z"/></g>
+      <g transform="translate(74,148) rotate(30)"><path d="M0 -15 C8 -6 8 6 0 15 C-8 6 -8 -6 0 -15 Z"/></g>
+      <g transform="translate(48,168) rotate(-28)"><path d="M0 -14 C7 -6 7 6 0 14 C-7 6 -7 -6 0 -14 Z"/></g>
+      <g transform="translate(72,168) rotate(28)"><path d="M0 -14 C7 -6 7 6 0 14 C-7 6 -7 -6 0 -14 Z"/></g>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="wrap row">
+    <a class="brand" href="#top"><span class="logo"><i class="ti ti-wheat"></i></span> Документы на зерно</a>
+    <div class="links">
+      <a class="l" href="#uslugi">Услуги</a>
+      <a class="l" href="#shema">Схема</a>
+      <a class="l" href="#pokazateli">Показатели</a>
+      <a class="l" href="#voprosy">Вопросы</a>
+      <button class="themebtn" id="themebtn" type="button" aria-label="Переключить тему"><i class="ti ti-moon"></i></button>
+      <a class="nbtn" href="https://t.me/ZernoDocs_bot" target="_blank" rel="noopener"><i class="ti ti-brand-telegram"></i> <span class="tx">Открыть в Telegram</span></a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <span class="aurora a1"></span><span class="aurora a2"></span><span class="aurora a3"></span>
+  <svg class="wheat wh-h1" data-speed="90" aria-hidden="true"><use href="#wheat"/></svg>
+  <svg class="wheat wh-h2" data-speed="-70" aria-hidden="true"><use href="#wheat"/></svg>
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-sparkles"></i> Группа МЕРКО</span>
+    <h1 class="reveal">Документы на зерно — <span class="g">без путаницы и беготни</span></h1>
+    <p class="lead reveal">Подскажет, какие документы нужны именно на вашу партию, куда идти, сколько это стоит и сколько ждать. А потом соберёт готовый пакет <b>.docx</b> на реальных бланках ЦОК АПК — по карточке клиента.</p>
+    <div class="actions reveal">
+      <a class="btn btn-tg" href="https://t.me/ZernoDocs_bot" target="_blank" rel="noopener"><i class="ti ti-brand-telegram"></i> Открыть в Telegram</a>
+      <a class="btn btn-glass" href="app"><i class="ti ti-device-desktop"></i> Веб-версия в браузере</a>
+    </div>
+    <div class="stats stagger">
+      <div class="stat"><div class="n" data-count="7">7</div><div class="t">видов документов на партию</div></div>
+      <div class="stat"><div class="n" data-count="4">4</div><div class="t">функции помощника</div></div>
+      <div class="stat"><div class="n" data-count="2">2</div><div class="t">интерфейса — бот и веб</div></div>
+      <div class="stat"><div class="n">1–8</div><div class="t">дней на оформление</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- PROBLEM -->
+<section class="section s-prob">
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-alert-triangle"></i> Зачем это нужно</span>
+    <h2 class="h2 reveal">Один неверный документ — и партия <span class="g">стоит</span></h2>
+    <p class="h2sub reveal">Под каждую культуру, назначение и маршрут — свой набор бумаг. Перепутать легко: где-то нужна декларация, где-то карантинный сертификат, а где-то фитосанитарный. Помощник убирает эту неопределённость.</p>
+    <div class="prob stagger">
+      <div class="pcard c1"><div class="pic"><i class="ti ti-help-octagon"></i></div><h4>Непонятно, что оформлять</h4><p>Требования зависят от культуры, рынка сбыта и карантинной зоны — и постоянно меняются.</p></div>
+      <div class="pcard c2"><div class="pic"><i class="ti ti-clock-dollar"></i></div><h4>Сюрпризы по цене и срокам</h4><p>Протоколы, декларации и экспертизы стоят по-разному и делаются от 1 до 8 дней.</p></div>
+      <div class="pcard c3"><div class="pic"><i class="ti ti-file-pencil"></i></div><h4>Бланки заполняются вручную</h4><p>Заявки и согласия перенабирают по карточке клиента — долго и с ошибками.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="section s-serv" id="uslugi">
+  <span class="aurora a1"></span><span class="aurora a2"></span>
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-route"></i> Виды услуг</span>
+    <h2 class="h2 reveal">Путь партии — <span class="g">от склада до отгрузки</span></h2>
+    <p class="h2sub reveal">Документы оформляются последовательно. Вот полный маршрут: помощник подскажет по каждому шагу, что нужно именно вам, а часть бумаг сразу соберёт в готовый пакет.</p>
+
+    <div class="flow stagger">
+      <div class="step">
+        <div class="node req"><i class="ti ti-file-certificate"></i></div>
+        <div class="scard req">
+          <div class="stop"><h3>Договор с ЦОК АПК</h3><span class="chip">Обязательно</span><span class="org"><i class="ti ti-building-bank"></i> ЦОК АПК</span></div>
+          <p class="desc">Заключается один раз. ЦОК присваивает предприятию номер договора — он действует бессрочно и сразу на все услуги. Этот номер потом указывается во всех заявках.</p>
+          <div class="meta"><span class="tag price"><i class="ti ti-cash"></i> по договору</span><span class="tag"><i class="ti ti-infinity"></i> бессрочно, один № на все услуги</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="node rec"><i class="ti ti-spray"></i></div>
+        <div class="scard rec">
+          <div class="stop"><h3>Обеззараживание (фумигация) склада</h3><span class="chip">Рекомендуется</span><span class="org"><i class="ti ti-flask"></i> фум-отряд</span></div>
+          <p class="desc">Подкарантинные склады обрабатывают до завоза зерна. После газации и проветривания загрузка через 5–10 суток. Акт обеззараживания входит в пакет на карантинный и фитосанитарный сертификаты.</p>
+          <div class="meta"><span class="tag price"><i class="ti ti-cash"></i> по договору с фум-отрядом</span><span class="tag term"><i class="ti ti-clock"></i> загрузка через 5–10 сут</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="node req"><i class="ti ti-test-pipe"></i></div>
+        <div class="scard req">
+          <div class="stop"><h3>Протокол испытаний — качество</h3><span class="chip">Обязательно</span><span class="org"><i class="ti ti-microscope"></i> Лаборатория ЦОК</span></div>
+          <p class="desc">Влажность, натура, белок/клейковина, число падения, примеси, заражённость, класс. Нужен для оформления СДИЗ во ФГИС «Зерно» при перемещении и продаже партии.</p>
+          <div class="meta"><span class="tag price"><i class="ti ti-cash"></i> ≈ 14 000–16 000 ₽ / партию</span><span class="tag term"><i class="ti ti-clock"></i> 3–7 раб. дней</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="node req"><i class="ti ti-shield-check"></i></div>
+        <div class="scard req">
+          <div class="stop"><h3>Декларация о соответствии ТР ТС 015/2011</h3><span class="chip">Обязательно</span><span class="org"><i class="ti ti-building-bank"></i> ЦОК АПК</span></div>
+          <p class="desc">Обязательна для оборота зерна в РФ и ЕАЭС. Опирается на протокол безопасности: микотоксины, пестициды, тяжёлые металлы, ГМО, радионуклиды. Образцы — 2 кг + 7 кг.</p>
+          <div class="meta"><span class="tag price"><i class="ti ti-cash"></i> ≈ 11 000–18 000 ₽ (с испытаниями)</span><span class="tag term"><i class="ti ti-clock"></i> 1–3 раб. дня · действует ~1 год</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="node chk"><i class="ti ti-map-pin"></i></div>
+        <div class="scard chk">
+          <div class="stop"><h3>Карантинный сертификат</h3><span class="chip">Если из карантинной зоны</span><span class="org"><i class="ti ti-plant"></i> Россельхознадзор</span></div>
+          <p class="desc">Нужен при вывозе подкарантинной продукции из карантинной фитозоны в регион вне этого карантина. Оформляется в ФГИС «Аргус-Фито» после экспертизы. На юге РФ обычно требуется.</p>
+          <div class="meta"><span class="tag price"><i class="ti ti-cash"></i> госуслуга — бесплатно*</span><span class="tag term"><i class="ti ti-clock"></i> ≈ 1 раб. день</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="node opt"><i class="ti ti-ship"></i></div>
+        <div class="scard opt">
+          <div class="stop"><h3>Фитосанитарный сертификат (ФСС) — экспорт</h3><span class="chip">Для экспорта</span><span class="org"><i class="ti ti-plant"></i> Россельхознадзор</span></div>
+          <p class="desc">Обязателен на каждую экспортную отгрузку за рубеж. Подаётся через «Мой экспорт» (РЭЦ). При необходимости — сертификат качества под требования импортёра и происхождения через ТПП.</p>
+          <div class="meta"><span class="tag price"><i class="ti ti-cash"></i> госуслуга — бесплатно*</span><span class="tag term"><i class="ti ti-clock"></i> ≈ 1 раб. день</span></div>
+        </div>
+      </div>
+      <div class="step">
+        <div class="node opt"><i class="ti ti-seeding"></i></div>
+        <div class="scard opt">
+          <div class="stop"><h3>Семена на посев — отдельная ветка</h3><span class="chip">Для семян</span><span class="org"><i class="ti ti-microscope"></i> Лаборатория ЦОК</span></div>
+          <p class="desc">Документ о посевных качествах (всхожесть, чистота, влажность, масса 1000 семян), а для сортовых/репродукционных — ещё и о сортовых качествах (апробация).</p>
+          <div class="meta"><span class="tag price"><i class="ti ti-cash"></i> по прейскуранту филиала</span><span class="tag term"><i class="ti ti-clock"></i> до ~8 раб. дней (всхожесть)</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="legend reveal">
+      <span><span class="dot" style="background:var(--red)"></span> Обязательно</span>
+      <span><span class="dot" style="background:var(--green)"></span> По требованию / случаю</span>
+      <span><span class="dot" style="background:var(--blue)"></span> Рекомендуется</span>
+      <span><span class="dot" style="background:var(--gold)"></span> Проверить статус</span>
+    </div>
+    <p class="note reveal">Цены ориентировочные; госуслуги Россельхознадзора без госпошлины (* протоколы и экспертиза оплачиваются отдельно). Точный набор зависит от культуры, назначения, рынка сбыта и карантинной зоны — в боте и веб-версии он считается автоматически под вашу партию.</p>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="section s-cap" id="vozmozhnosti">
+  <span class="aurora a1"></span><span class="aurora a2"></span>
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-bolt"></i> Что умеет помощник</span>
+    <h2 class="h2 reveal">Не просто справочник — <span class="g">рабочий инструмент</span></h2>
+    <p class="h2sub reveal">Четыре функции, которые закрывают весь цикл: понять, что нужно → собрать документы → не запутаться в порталах.</p>
+    <div class="feat stagger">
+      <div class="fc f1">
+        <div class="ic"><i class="ti ti-list-check"></i></div>
+        <h3>Чек-лист под партию</h3>
+        <p>Выбираете параметры — получаете персональный список документов.</p>
+        <ul><li>Культура, вид, назначение, рынок, фитозона</li><li>Что обязательно, что по требованию</li><li>Цена, срок и куда обращаться по каждому</li></ul>
+      </div>
+      <div class="fc f2">
+        <div class="ic"><i class="ti ti-files"></i></div>
+        <h3>Готовые пакеты .docx</h3>
+        <p>Документы на реальных бланках ЦОК АПК — сразу к печати и подаче.</p>
+        <ul><li>ЦОК-заявка по культуре (пакет документов)</li><li>Карантинный сертификат (пакет документов)</li><li>Договор ЦОК + согласие на обработку ПДн</li><li>Заявление в РСХН на отбор проб</li></ul>
+      </div>
+      <div class="fc f3">
+        <div class="ic"><i class="ti ti-scan"></i></div>
+        <h3>Распознавание данных</h3>
+        <p>Реквизиты подставляются сами — переписывать вручную не нужно.</p>
+        <ul><li>Карточка клиента (ИП или ООО) по фото/файлу</li><li>Паспорт — для согласия на обработку ПДн</li><li>Поддержка пшеницы, кукурузы, подсолнечника и др.</li></ul>
+      </div>
+      <div class="fc f4">
+        <div class="ic"><i class="ti ti-book"></i></div>
+        <h3>Пошаговые инструкции</h3>
+        <p>Как работать с государственными порталами и системами учёта.</p>
+        <ul><li>ФГИС «Аргус-Фито» — регистрация и работа</li><li>ФГИС «Зерно» — лаборатория и СДИЗ</li><li>Справка о пестицидах · учёт проб в 1С</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHANNELS -->
+<section class="section s-chan">
+  <div class="wrap center">
+    <span class="kicker reveal"><i class="ti ti-devices"></i> Где пользоваться</span>
+    <h2 class="h2 reveal">Два удобных <span class="g">интерфейса</span></h2>
+    <p class="h2sub reveal">Одинаковый движок и данные — выбирайте, что под рукой.</p>
+    <div class="chan stagger" style="text-align:left">
+      <a class="ch tg" href="https://t.me/ZernoDocs_bot" target="_blank" rel="noopener">
+        <span class="blob"></span>
+        <span class="ic"><i class="ti ti-brand-telegram"></i></span>
+        <span class="name">Telegram-бот</span>
+        <span class="d">@ZernoDocs_bot — всё прямо в переписке. Удобно с телефона: фото карточки, чек-лист, готовый zip с документами.</span>
+        <span class="go">Открыть в Telegram <i class="ti ti-arrow-right"></i></span>
+      </a>
+      <a class="ch web" href="app">
+        <span class="blob"></span>
+        <span class="ic"><i class="ti ti-device-desktop"></i></span>
+        <span class="name">Веб-версия</span>
+        <span class="d">В браузере на компьютере: интерактивный чек-лист с печатью в PDF, форма сборки пакета и распознавание карточки.</span>
+        <span class="go">Открыть в браузере <i class="ti ti-arrow-right"></i></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section class="section s-how" id="kak">
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-rocket"></i> Как это работает</span>
+    <h2 class="h2 reveal">От параметров партии до <span class="g">готового пакета</span></h2>
+    <div class="how stagger">
+      <div class="hc s1"><div class="n">1</div><h4>Параметры партии</h4><p>Культура, назначение, рынок сбыта, карантинная зона.</p></div>
+      <div class="hc s2"><div class="n">2</div><h4>Чек-лист</h4><p>Список документов со стоимостью, сроками и куда идти.</p></div>
+      <div class="hc s3"><div class="n">3</div><h4>Карточка клиента</h4><p>Загрузили фото — реквизиты ИП/ООО распознались сами.</p></div>
+      <div class="hc s4"><div class="n">4</div><h4>Готовый пакет</h4><p>Скачали .docx на бланках ЦОК и отправили на оформление.</p></div>
+    </div>
+    <a class="dl reveal" href="instrukciya.docx">
+      <span class="ic"><i class="ti ti-file-text"></i></span>
+      <div><div class="t">Инструкция: «Аргус-Фито / ФГИС "Зерно" + 1С»</div><div class="d">Пошаговое руководство по оформлению, формат .docx</div></div>
+      <span class="arr"><i class="ti ti-download"></i></span>
+    </a>
+  </div>
+</section>
+
+
+<!-- СХЕМА ДЕКЛАРИРОВАНИЯ (v2) -->
+<section class="section s-prob" id="shema">
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-git-branch"></i> Декларирование</span>
+    <h2 class="h2 reveal">Подберём <span class="g">схему декларирования</span></h2>
+    <p class="h2sub reveal">Серийная поставка или разовая партия, свои доказательства или протокол лаборатории — от этого зависит схема и срок действия декларации. Ответьте на два вопроса.</p>
+    <div class="picker reveal">
+      <div class="pq">
+        <div class="lb">Как поставляете зерно?</div>
+        <div class="pseg" data-g="supply">
+          <button data-v="serial" class="on">Серийно (регулярно)</button>
+          <button data-v="batch">Разовая партия / контракт</button>
+        </div>
+      </div>
+      <div class="pq">
+        <div class="lb">Чем подтверждаете безопасность?</div>
+        <div class="pseg" data-g="proof">
+          <button data-v="lab" class="on">Протокол аккредитованной лаборатории</button>
+          <button data-v="own">Свои доказательства</button>
+          <button data-v="smk">Лаборатория + система менеджмента</button>
+        </div>
+      </div>
+      <div class="schres">
+        <div class="code" id="schCode">—</div>
+        <div class="tm" id="schTerm"></div>
+        <div class="hint" id="schHint"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- СМЕТА ПО ПАРТИИ (v2) -->
+<section class="section s-serv">
+  <span class="aurora a1"></span>
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-receipt"></i> Прозрачно</span>
+    <h2 class="h2 reveal">Понятная <span class="g">смета по партии</span></h2>
+    <p class="h2sub reveal">Помощник сразу показывает ориентир: какие документы нужны, сколько примерно стоят и за сколько дней готовы. Пример — пшеница 4 кл., продовольственная, внутренний рынок:</p>
+    <div class="estbox reveal">
+      <div class="eh">🌾 Пшеница · товарное зерно · продовольственное · внутренний рынок РФ</div>
+      <div class="eb">
+        <div class="erow"><span class="nm">Протокол испытаний — качество<span class="mini r">обязательно</span></span><span class="pr">≈ 14 000–16 000 ₽ · 3–7 дн.</span></div>
+        <div class="erow"><span class="nm">Декларация ТР ТС 015/2011<span class="mini r">обязательно</span></span><span class="pr">≈ 11 000–18 000 ₽ · 1–3 дн.</span></div>
+        <div class="erow"><span class="nm">Протокол качества под цену<span class="mini b">рекомендуется</span></span><span class="pr">по прейскуранту</span></div>
+        <div class="erow"><span class="nm">Договор с ЦОК АПК<span class="mini b">один раз</span></span><span class="pr">бессрочно</span></div>
+        <div class="etot"><span>Ориентир по партии</span><span class="v">≈ 25 000–34 000 ₽ · 3–7 дней</span></div>
+      </div>
+    </div>
+    <p class="note reveal">Цены ориентировочные. Госуслуги Россельхознадзора — без госпошлины (протоколы и экспертиза оплачиваются отдельно). Точные суммы — в филиале ЦОК АПК.</p>
+  </div>
+</section>
+
+<!-- ПОКАЗАТЕЛИ ЛАБОРАТОРИИ (v2) -->
+<section class="section s-prob" id="pokazateli">
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-microscope"></i> Лаборатория</span>
+    <h2 class="h2 reveal">Что <span class="g">заявить лаборатории</span></h2>
+    <p class="h2sub reveal">Придёте подготовленными. Выберите культуру — покажем показатели безопасности (для декларации ТР ТС 015) и качества (для протокола и СДИЗ).</p>
+    <div class="labsel reveal">
+      <select id="labCrop" aria-label="Культура">
+        <option>Пшеница</option><option>Ячмень</option><option>Кукуруза</option>
+        <option>Подсолнечник</option><option>Рожь</option><option>Овёс</option>
+        <option>Горох / зернобобовые</option><option>Рапс</option><option>Соя</option>
+        <option>Лён</option><option>Другая культура</option>
+      </select>
+      <div class="labcols">
+        <div><h4><i class="ti ti-shield-half"></i> Безопасность · декларация ТР ТС 015</h4><ul id="labSafety"></ul></div>
+        <div><h4><i class="ti ti-award"></i> Качество · протокол / СДИЗ</h4><ul id="labQuality"></ul></div>
+      </div>
+    </div>
+    <p class="note reveal">Перечень ориентировочный — точные показатели и нормы сверяйте с действующей редакцией ТР ТС 015/2011 и прейскурантом ЦОК АПК.</p>
+  </div>
+</section>
+
+<!-- ОБРАЗЦЫ (v2) -->
+<section class="section s-serv">
+  <div class="wrap center">
+    <span class="kicker reveal"><i class="ti ti-files"></i> Образцы</span>
+    <h2 class="h2 reveal">Как выглядят <span class="g">документы</span></h2>
+    <p class="h2sub reveal">Все бланки — эталонные, как в ЦОК АПК. Вот что соберёт помощник.</p>
+    <div class="samp stagger" style="text-align:left">
+      <div class="spc"><div class="pv"><img loading="lazy" src="static/samples/zayavka.png" alt="Образец ЦОК-заявки на культуру"></div><div class="cap">ЦОК-заявка на культуру</div></div>
+      <div class="spc"><div class="pv"><img loading="lazy" src="static/samples/dogovor.png" alt="Образец договора ЦОК"></div><div class="cap">Договор ЦОК + согласие на ПДн</div></div>
+      <div class="spc"><div class="pv"><img loading="lazy" src="static/samples/karantin.png" alt="Образец пакета на карантинный сертификат"></div><div class="cap">Пакет на карантинный сертификат</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ (v2) -->
+<section class="section s-how" id="voprosy">
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-help-circle"></i> Частые вопросы</span>
+    <h2 class="h2 reveal">Что <span class="g">путают чаще всего</span></h2>
+    <div class="faqx reveal" id="faqBox"></div>
+  </div>
+</section>
+
+<!-- ПРОВЕРКА В РЕЕСТРЕ (v2) -->
+<section class="section s-chan">
+  <div class="wrap">
+    <span class="kicker reveal"><i class="ti ti-shield-check"></i> Проверка</span>
+    <h2 class="h2 reveal">Проверьте готовую декларацию <span class="g">в реестре</span></h2>
+    <p class="h2sub reveal">Оформили — убедитесь, что декларация действующая и подлинная. Второй бот достанет карточку из реестра ФГИС по номеру: статус, заявитель, изготовитель, продукция, срок действия.</p>
+    <div class="reg reveal">
+      <span class="ic"><i class="ti ti-shield-check"></i></span>
+      <div class="tx"><h3>@Deklaraciymerko_bot</h3><p>Введите номер декларации ЕАЭС — получите карточку из официального реестра. Быстро и бесплатно.</p></div>
+      <a class="btn btn-tg" href="https://t.me/Deklaraciymerko_bot" target="_blank" rel="noopener"><i class="ti ti-brand-telegram"></i> Проверить декларацию</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="s-cta">
+  <div class="wrap">
+    <div class="cta reveal">
+      <span class="aurora a1"></span><span class="aurora a2"></span>
+      <svg class="wheat wh-c1" data-speed="60" aria-hidden="true"><use href="#wheat"/></svg>
+      <svg class="wheat wh-c2" data-speed="-60" aria-hidden="true"><use href="#wheat"/></svg>
+      <div class="wrap" style="padding:0">
+        <h2>Соберите документы на партию прямо сейчас</h2>
+        <p>Откройте бота или веб-версию, выберите параметры — и получите чек-лист и готовый пакет за несколько минут.</p>
+        <div class="actions">
+          <a class="btn btn-tg" href="https://t.me/ZernoDocs_bot" target="_blank" rel="noopener"><i class="ti ti-brand-telegram"></i> Открыть в Telegram</a>
+          <a class="btn btn-glass" href="app"><i class="ti ti-device-desktop"></i> Веб-версия</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div class="l"><span class="logo"><i class="ti ti-wheat"></i></span> Помощник по документам на зерно · Группа МЕРКО</div>
+      <div class="r">
+        <a href="https://t.me/ZernoDocs_bot" target="_blank" rel="noopener">@ZernoDocs_bot</a>
+        <a href="app">Веб-версия</a>
+        <a href="instrukciya.docx">Инструкция</a>
+      </div>
+    </div>
+    <p class="disc">Информация носит справочный характер. Цены и сроки ориентировочные и уточняются в филиале ЦОК АПК и территориальном управлении Россельхознадзора. Документы формируются по предоставленной карточке клиента и подлежат проверке перед подачей.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var rm = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // прогресс-бар + тень навбара
+  var prog = document.getElementById('prog'), nav = document.getElementById('nav');
+  function onScroll(){
+    var h = document.documentElement, max = h.scrollHeight - h.clientHeight;
+    prog.style.width = (max>0 ? (h.scrollTop/max*100) : 0) + '%';
+    nav.classList.toggle('scrolled', h.scrollTop > 8);
+  }
+  document.addEventListener('scroll', onScroll, {passive:true}); onScroll();
+
+  // reveal при скролле + count-up
+  function countUp(el){
+    var target = parseInt(el.getAttribute('data-count'),10);
+    if(isNaN(target)) return;
+    if(rm){ el.textContent = target; return; }
+    var start=null, dur=1100;
+    function tick(t){ if(!start)start=t; var p=Math.min((t-start)/dur,1);
+      el.textContent = Math.round(target*(1-Math.pow(1-p,3)));
+      if(p<1) requestAnimationFrame(tick); }
+    requestAnimationFrame(tick);
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        e.target.querySelectorAll && e.target.querySelectorAll('[data-count]').forEach(countUp);
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.15, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal,.stagger').forEach(function(el){io.observe(el);});
+
+  // scroll-spy в навигации
+  var links = [].slice.call(document.querySelectorAll('.nav .l'));
+  var secs = links.map(function(a){return document.querySelector(a.getAttribute('href'));});
+  var spy = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        var i = secs.indexOf(e.target);
+        links.forEach(function(l){l.classList.remove('active');});
+        if(i>-1) links[i].classList.add('active');
+      }
+    });
+  }, {threshold:0.4});
+  secs.forEach(function(s){if(s) spy.observe(s);});
+
+  // переключатель темы: фермерская → тёмная → бухгалтерская
+  var tb=document.getElementById('themebtn');
+  var THEMES=['light','dark','ledger'];
+  var ICON={light:'sun-high',dark:'moon',ledger:'building-bank'};
+  var TNAME={light:'фермерская',dark:'тёмная',ledger:'бухгалтерская'};
+  function curTheme(){return document.documentElement.getAttribute('data-theme')||'light';}
+  function syncIcon(){ tb.innerHTML='<i class="ti ti-'+(ICON[curTheme()]||'sun-high')+'"></i>'; tb.title='Тема: '+(TNAME[curTheme()]||''); }
+  syncIcon();
+  tb.addEventListener('click',function(){
+    var nt=THEMES[(THEMES.indexOf(curTheme())+1)%THEMES.length];
+    document.documentElement.setAttribute('data-theme',nt);
+    try{localStorage.setItem('zerno-theme',nt)}catch(e){}
+    syncIcon();
+  });
+
+  // spotlight + 3D-наклон
+  var tiltSel='.pcard,.fc,.hc,.stat';
+  [].slice.call(document.querySelectorAll('.pcard,.scard,.hc,.fc,.stat')).forEach(function(c){
+    var tilt=c.matches(tiltSel);
+    c.addEventListener('mousemove',function(e){
+      var r=c.getBoundingClientRect();
+      var px=(e.clientX-r.left)/r.width, py=(e.clientY-r.top)/r.height;
+      c.style.setProperty('--mx',(px*100).toFixed(1)+'%');
+      c.style.setProperty('--my',(py*100).toFixed(1)+'%');
+      if(tilt && !rm){
+        c.style.transform='perspective(820px) rotateX('+((0.5-py)*7).toFixed(2)+'deg) rotateY('+((px-0.5)*7).toFixed(2)+'deg) translateY(-6px)';
+      }
+    });
+    c.addEventListener('mouseleave',function(){ c.style.transform=''; });
+  });
+
+  // параллакс колосьев
+  var wheats=[].slice.call(document.querySelectorAll('.wheat[data-speed]'));
+  function parallax(){
+    if(rm) return;
+    var vh=window.innerHeight||document.documentElement.clientHeight;
+    wheats.forEach(function(w){
+      var r=w.getBoundingClientRect(), center=r.top+r.height/2;
+      var rel=(center - vh/2)/vh;
+      w.style.setProperty('--shift',(rel*parseFloat(w.dataset.speed)).toFixed(1)+'px');
+    });
+  }
+  document.addEventListener('scroll',function(){requestAnimationFrame(parallax);},{passive:true});
+  window.addEventListener('resize',parallax);
+  parallax();
+})();
+</script>
+
+<script>
+(function(){
+  // ----- автоподбор схемы -----
+  var ss={supply:"serial",proof:"lab"};
+  var SCH={
+    serial:{lab:["Схема 3д","серийный выпуск, протокол аккредитованной лаборатории — действует до 3 лет"],
+            own:["Схема 1д","серийный выпуск, свои доказательства — действует до 3 лет"],
+            smk:["Схема 6д","серийный выпуск + сертифицированная система менеджмента — действует до 5 лет"]},
+    batch:{ lab:["Схема 4д","разовая партия, протокол аккредитованной лаборатории — на эту партию"],
+            own:["Схема 2д","разовая партия, свои доказательства — на эту партию"],
+            smk:["Схема 4д","для разовой партии система менеджмента не даёт продления — на эту партию"]}
+  };
+  function rsch(){var r=SCH[ss.supply][ss.proof];
+    document.getElementById('schCode').textContent=r[0];
+    document.getElementById('schTerm').textContent=r[1];
+    document.getElementById('schHint').textContent='Помощник подставит схему в карточку декларации автоматически.';}
+  document.querySelectorAll('.pseg').forEach(function(seg){
+    seg.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
+      seg.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');ss[seg.dataset.g]=b.dataset.v;rsch();});});
+  rsch();
+
+  // ----- показатели лаборатории -----
+  var SG=["токсичные элементы: свинец, кадмий, мышьяк, ртуть",
+    "микотоксины: афлатоксин B1, ДОН, зеараленон, Т-2 токсин",
+    "пестициды (ГХЦГ, ДДТ и метаболиты, ртутьорганические, 2,4-Д)",
+    "радионуклиды: цезий-137, стронций-90",
+    "вредные примеси (спорынья, головня, горчак, вязель)",
+    "заражённость вредителями хлебных запасов"];
+  var SO=SG.slice(0,4).concat(["бенз(а)пирен","вредные примеси, заражённость вредителями"]);
+  var LAB={
+    "Пшеница":{s:SG,q:["влажность","натура","клейковина (кол-во + ИДК)","белок","число падения","стекловидность","сорная и зерновая примесь","класс","заражённость"]},
+    "Ячмень":{s:SG,q:["влажность","натура","белок","крупность","сорная и зерновая примесь","жизнеспособность (пивоваренный)","класс","заражённость"]},
+    "Кукуруза":{s:SG.concat(["фумонизины (B1+B2)"]),q:["влажность","сорная и зерновая примесь","число падения","класс","заражённость"]},
+    "Подсолнечник":{s:SO,q:["влажность","масличность","кислотное число масла","сорная и масличная примесь","заражённость"]},
+    "Рожь":{s:SG,q:["влажность","натура","число падения","сорная и зерновая примесь","класс","заражённость"]},
+    "Овёс":{s:SG,q:["влажность","натура","сорная и зерновая примесь","мелкие зёрна","класс","заражённость"]},
+    "Горох / зернобобовые":{s:SG,q:["влажность","белок","сорная и зерновая примесь","повреждённые зёрна","заражённость"]},
+    "Рапс":{s:SO.concat(["ГМО (есть зарегистрированные линии)"]),q:["влажность","масличность","кислотное число масла","эруковая кислота","глюкозинолаты","сорная и масличная примесь","заражённость"]},
+    "Соя":{s:SO.concat(["ГМО (есть зарегистрированные линии)"]),q:["влажность","белок","масличность","сорная и масличная примесь","заражённость"]},
+    "Лён":{s:SO,q:["влажность","масличность","кислотное число масла","сорная и масличная примесь","заражённость"]},
+    "Другая культура":{s:SG,q:["влажность","сорная и зерновая примесь","класс/сорт","заражённость","профильные показатели — уточнить в ЦОК"]}
+  };
+  function rlab(){var c=document.getElementById('labCrop').value;var d=LAB[c]||LAB["Другая культура"];
+    document.getElementById('labSafety').innerHTML=d.s.map(function(x){return '<li>'+x+'</li>';}).join('');
+    document.getElementById('labQuality').innerHTML=d.q.map(function(x){return '<li>'+x+'</li>';}).join('');}
+  document.getElementById('labCrop').addEventListener('change',rlab);rlab();
+
+  // ----- FAQ -----
+  var FAQ=[
+   ["Чем декларация ТР ТС 015 отличается от СДИЗ?","Это разные документы, они не заменяют друг друга. <b>Декларация ТР ТС 015/2011</b> подтверждает безопасность партии (микотоксины, пестициды, тяжёлые металлы, радионуклиды), действует ~1 год и регистрируется в реестре ФГИС. <b>СДИЗ</b> оформляется во ФГИС «Зерно» на каждое перемещение партии и опирается на протокол качества. Без декларации партию не пустят в оборот, без СДИЗ — не перевезут."],
+   ["Сколько действует декларация?","Как правило <b>до 1 года</b>; для серийного выпуска по схеме 1д/3д — до 3 лет, по 6д с системой менеджмента — до 5 лет. Перед продажей всегда проверяйте по номеру в реестре, что декларация действующая. Истёкшую не продлевают — оформляют новую."],
+   ["Сколько зерна нужно на образцы?","Для декларации в лабораторию сдают <b>два пакета: 2 кг и 7 кг</b>. Образцы должны быть подписаны и соответствовать электронно поданным документам — иначе отказ."],
+   ["Нужен ли карантинный сертификат?","Зависит от карантинного статуса региона отправления и назначения. Вывоз подкарантинной продукции <b>из карантинной фитозоны</b> в регион вне этого карантина (внутри РФ) — нужен; перемещение внутри одной зоны — нет. Статус проверяют в «Аргус-Фито (Гео)» или в управлении РСХН. На юге РФ обычно требуется."],
+   ["Что такое схема декларирования?","Схема определяет основания и срок действия декларации: <b>1д</b> — серийно, свои доказательства (до 3 лет); <b>3д</b> — серийно, протокол лаборатории (до 3 лет); <b>6д</b> — серийно + система менеджмента (до 5 лет); <b>2д/4д</b> — разовая партия. Помощник подберёт схему по двум вопросам выше."],
+   ["Можно ли оформить декларацию самому?","Да. Нужны усиленная ЭЦП, личный кабинет на Госуслугах и в ФГИС Росаккредитации и протокол испытаний из аккредитованной лаборатории. Частые ошибки: неверный код ТН ВЭД, незаверенные сканы, несоответствие данных. Помощник готовит документы, а подлинность готовой декларации можно проверить в @Deklaraciymerko_bot."],
+   ["Чем отличается продовольственное от фуражного?","Набор документов близкий, но <b>нормы безопасности для продовольственного строже</b>. Фуражное декларируется по своим показателям, включая микробиологию для кормовых целей. Назначение влияет на класс и цену."],
+   ["Что оформляется один раз, а что на каждую партию?","<b>Один раз:</b> договор с ЦОК АПК (бессрочный номер на все услуги). <b>Раз в сезон:</b> фумигация склада, декларация (на срок действия). <b>На каждую партию:</b> протокол качества, СДИЗ, карантинный сертификат (если нужен), фитосанитарный сертификат на экспорт."]
+  ];
+  document.getElementById('faqBox').innerHTML=FAQ.map(function(p){
+    return '<details><summary>'+p[0]+'<span class="pl">+</span></summary><div class="ans">'+p[1]+'</div></details>';}).join('');
+}());
+</script>
+</body>
+</html>
