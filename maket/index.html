@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Мерко Групп — закупка зерновых, масличных и бобовых культур</title>
+<meta name="description" content="Мерко Групп — закупка зерновых, масличных и бобовых культур в Запорожской, Херсонской областях и Крыму. Цена известна до погрузки, расчёт по факту веса на выгрузке.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Bitter:wght@600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --paper:#f6f3ea; --ink:#16241c; --ink-2:#4a5b51; --mute:#7a8c81;
+  --line:#ddd5c4; --line-2:#e9e3d6; --green:#3d6b4a; --gold:#8a7f5f; --white:#fffdf8;
+  --r:2px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font:400 16px/1.6 'Inter',-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding:0 34px}
+.eyebrow{font:600 11px 'Inter';letter-spacing:2.6px;color:var(--gold);text-transform:uppercase}
+
+/* ===== шапка ===== */
+header{position:sticky;top:0;z-index:60;background:rgba(246,243,234,.93);
+  backdrop-filter:blur(12px);border-bottom:1px solid transparent;transition:border-color .25s}
+header.stuck{border-bottom-color:var(--line)}
+.hd{display:flex;justify-content:space-between;align-items:center;padding:20px 0;gap:24px}
+.brand{font:700 14px 'Inter';letter-spacing:3.4px;text-decoration:none;white-space:nowrap}
+.nav{display:flex;gap:26px}
+.nav a{color:var(--ink-2);text-decoration:none;font-size:14px;padding:4px 0;
+  border-bottom:1px solid transparent;transition:.18s}
+.nav a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+.hd .tel{font:600 14.5px 'Inter';text-decoration:none;white-space:nowrap}
+.burger{display:none;background:none;border:0;cursor:pointer;padding:8px}
+.burger span{display:block;width:22px;height:1.5px;background:var(--ink);margin:5px 0}
+
+/* ===== разворот ===== */
+.hero{display:grid;grid-template-columns:1.32fr .68fr;gap:52px;align-items:end;
+  border-top:1px solid var(--line);padding-top:26px}
+.hero .hl{padding:52px 0 60px}
+h1{font:700 clamp(40px,5vw,74px)/1.03 'Bitter',Georgia,serif;letter-spacing:-1.4px;margin-top:26px}
+h1 em{font-style:italic;color:var(--green)}
+.sub{margin-top:26px;font-size:18px;line-height:1.7;color:var(--ink-2);max-width:530px}
+.act{margin-top:34px;display:flex;gap:12px;flex-wrap:wrap}
+.btn{padding:15px 30px;text-decoration:none;font:600 14.5px 'Inter';border-radius:var(--r);
+  display:inline-flex;align-items:center;gap:9px;transition:.18s}
+.btn.p{background:var(--ink);color:var(--paper)}
+.btn.p:hover{background:var(--green)}
+.btn.s{border:1px solid var(--line);color:var(--ink)}
+.btn.s:hover{border-color:var(--ink)}
+.shot{align-self:stretch;min-height:440px;background:url('../wheat.webp') center/cover no-repeat;
+  border-radius:var(--r);filter:saturate(.86) contrast(1.03)}
+
+.nums{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);align-items:start}
+.nums > div{padding:26px 0}
+.nums > div + div{border-left:1px solid var(--line);padding-left:30px}
+.nums .n{font:700 40px/1 'Bitter',serif;letter-spacing:-1px}
+.nums .l{font-size:13px;color:var(--mute);margin-top:9px;max-width:240px;line-height:1.5}
+
+/* ===== секции ===== */
+section{padding:78px 0 8px;scroll-margin-top:78px}
+.sh{margin-bottom:32px}
+h2{font:700 clamp(28px,3vw,36px) 'Bitter',serif;letter-spacing:-.6px;margin:8px 0 6px}
+.sh p{color:var(--mute);font-size:15.5px;max-width:600px}
+
+.list{border-top:1px solid var(--line)}
+.it{display:grid;grid-template-columns:58px 1fr auto;gap:22px;align-items:center;
+  padding:17px 0;border-bottom:1px solid var(--line);transition:padding-left .2s,background .2s}
+.it:hover{padding-left:10px}
+.it img{width:58px;height:58px;object-fit:cover;border-radius:var(--r)}
+.it .t{font-weight:600;font-size:17px}
+.it .d{font-size:13.5px;color:var(--mute);margin-top:3px;line-height:1.55}
+.it .g{font:600 13px 'Inter';color:var(--green);text-decoration:none;white-space:nowrap;
+  border-bottom:1px solid transparent}
+.it:hover .g{border-bottom-color:var(--green)}
+.it .fx{font:500 12px 'IBM Plex Mono';color:var(--gold);letter-spacing:.4px;
+  border:1px solid var(--line);padding:3px 8px;border-radius:var(--r);white-space:nowrap;margin-left:10px}
+
+.grp{font:600 11px 'Inter';letter-spacing:2.2px;text-transform:uppercase;color:var(--gold);
+  padding:26px 0 10px;border-bottom:1px solid var(--line)}
+.list .grp:first-child{padding-top:14px}
+
+.why{display:grid;grid-template-columns:repeat(3,1fr);gap:44px;padding-top:6px}
+.why h3{font:700 20px 'Bitter',serif;margin-bottom:10px;padding-top:16px;border-top:2px solid var(--ink)}
+.why p{font-size:14.5px;line-height:1.7;color:var(--ink-2)}
+
+.serv{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line)}
+.serv div{padding:24px 26px 26px;border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
+.serv div:nth-child(3n){border-right:0}
+.serv .st{font:600 16.5px 'Inter';margin-bottom:6px}
+.serv .sd{font-size:14px;color:var(--mute);line-height:1.6}
+
+.calc{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:var(--r)}
+.calc a{padding:30px 30px 32px;text-decoration:none;border-right:1px solid var(--line);transition:background .2s}
+.calc a:last-child{border-right:0}
+.calc a:hover{background:var(--white)}
+.calc .ct{font:700 21px 'Bitter',serif;margin:10px 0 7px}
+.calc .cd{font-size:14px;color:var(--mute);line-height:1.6}
+.calc .cg{display:inline-block;margin-top:14px;font:600 13px 'Inter';color:var(--green)}
+
+.geo{margin-top:74px;padding:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  display:flex;align-items:baseline;gap:28px;flex-wrap:wrap}
+.geo b{font:700 20px 'Bitter',serif;font-weight:700}
+.geo span{font-size:15px;color:var(--ink-2)}
+.geo span+span{padding-left:28px;border-left:1px solid var(--line)}
+
+.cons{border-top:1px solid var(--line)}
+.con{display:grid;grid-template-columns:44px 1fr auto;gap:20px;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--line);transition:padding-left .2s}
+.con:hover{padding-left:10px}
+.con .av{width:44px;height:44px;border-radius:50%;background:var(--ink);color:var(--paper);
+  display:flex;align-items:center;justify-content:center;font:600 16px 'Inter'}
+.con .nm{font-weight:600;font-size:16.5px}
+.con .rl{font-size:13px;color:var(--mute);margin-top:2px}
+.con .ph{font:600 16px 'IBM Plex Mono';text-decoration:none;letter-spacing:-.3px;white-space:nowrap}
+
+footer{margin-top:70px;padding:34px 0 40px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--mute);font-size:13px}
+
+/* появление по мере прокрутки */
+.rv{opacity:0;transform:translateY(20px);transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}}
+html.static .rv{opacity:1!important;transform:none!important;transition:none!important}
+
+/* нижняя панель на телефоне */
+.mob{display:none;position:fixed;left:0;right:0;bottom:0;z-index:70;
+  background:rgba(246,243,234,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));gap:10px}
+.mob a{flex:1;text-align:center;padding:14px 8px;text-decoration:none;font:600 15px 'Inter';border-radius:var(--r)}
+.mob .p{background:var(--ink);color:var(--paper)}
+.mob .s{border:1px solid var(--line)}
+
+@media(max-width:1000px){
+  .hero{grid-template-columns:1fr;gap:0}
+  .hero .hl{padding:36px 0 30px}
+  .shot{min-height:240px;margin-bottom:34px}
+  .why,.serv{grid-template-columns:1fr}
+  .serv div{border-right:0}
+  .calc{grid-template-columns:1fr}
+  .calc a{border-right:0;border-bottom:1px solid var(--line)}
+  .calc a:last-child{border-bottom:0}
+  .nums{grid-template-columns:1fr}
+  .nums > div + div{border-left:0;padding-left:0;border-top:1px solid var(--line-2)}
+}
+@media(max-width:760px){
+  .wrap{padding:0 20px}
+  .nav{display:none;position:absolute;left:0;right:0;top:100%;background:var(--paper);
+    border-bottom:1px solid var(--line);flex-direction:column;gap:0;padding:6px 20px 16px}
+  .nav.open{display:flex}
+  .nav a{padding:12px 0;border-bottom:1px solid var(--line-2)}
+  .burger{display:block}
+  .hd .tel{display:none}
+  header{position:relative}
+  body{padding-bottom:78px}
+  .mob{display:flex}
+  section{padding:52px 0 6px}
+  .it{grid-template-columns:48px 1fr;gap:16px}
+  .it img{width:48px;height:48px}
+  .it .g{grid-column:2;justify-self:start;margin-top:6px}
+  .it .fx{margin-left:0}
+  .con{grid-template-columns:40px 1fr}
+  .con .av{width:40px;height:40px}
+  .con .ph{grid-column:2;margin-top:4px}
+  .geo span+span{padding-left:0;border-left:0}
+  .act .btn{flex:1 1 100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+<script>if(location.search.indexOf('static')>-1)document.documentElement.classList.add('static');</script>
+
+<header id="hdr">
+  <div class="wrap hd">
+    <a class="brand" href="#top">МЕРКО ГРУПП</a>
+    <nav class="nav" id="nav">
+      <a href="#zakup">Закупаем</a>
+      <a href="#prodaem">Удобрения</a>
+      <a href="#uslugi">Услуги</a>
+      <a href="#calc">Калькуляторы</a>
+      <a href="#kak">Как работаем</a>
+      <a href="#kontakty">Контакты</a>
+    </nav>
+    <a class="tel" href="tel:+79900165271">+7 990 016-52-71</a>
+    <button class="burger" id="bg" aria-label="Меню"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="wrap" id="top">
+
+  <!-- ============ РАЗВОРОТ ============ -->
+  <div class="hero">
+    <div class="hl">
+      <div class="eyebrow">Закупка зерна · Юг России</div>
+      <h1>Сделка без <em>сюрпризов</em> на весах</h1>
+      <p class="sub">Цену по вашей культуре и качеству вы узнаёте до того, как грузить машину.
+        Расчёт — по факту веса на выгрузке. Партия от 27 тонн, вывозим своим транспортом со склада.</p>
+      <div class="act">
+        <a class="btn p" href="https://t.me/MercoGroupnew_bot">Узнать цену в боте</a>
+        <a class="btn s" href="tel:+79900165271">+7 990 016-52-71</a>
+      </div>
+    </div>
+    <div class="shot"></div>
+  </div>
+
+  <div class="nums rv">
+    <div><div class="n">3</div><div class="l">региона: Запорожская, Херсонская области и Крым</div></div>
+    <div><div class="n">10+</div><div class="l">культур закупаем — зерновые, масличные, бобовые</div></div>
+    <div><div class="n">27 т</div><div class="l">минимальная партия</div></div>
+  </div>
+
+  <!-- ============ ЗАКУПАЕМ ============ -->
+  <section id="zakup">
+    <div class="sh rv">
+      <div class="eyebrow">Закупаем</div>
+      <h2>Зерновые, масличные, бобовые</h2>
+      <p>Оперативный выезд для отбора проб, лабораторный анализ качества, вывоз своим транспортом со склада.</p>
+    </div>
+    <div class="list">
+      <div class="it rv"><img src="../wheat.webp" alt="Пшеница" loading="lazy" decoding="async">
+        <div><div class="t">Пшеница</div><div class="d">Закупаем пшеницу всех классов. Оперативный выезд для отбора проб. Вывозим своим транспортом со склада.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+      <div class="it rv"><img src="../barley.webp" alt="Ячмень" loading="lazy" decoding="async">
+        <div><div class="t">Ячмень</div><div class="d">Закупаем фуражный и пивоваренный ячмень. Прозрачные условия приёмки и лабораторный анализ качества.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+      <div class="it rv"><img src="../sunflower-seeds.webp" alt="Подсолнечник" loading="lazy" decoding="async">
+        <div><div class="t">Подсолнечник</div><div class="d">Закупаем подсолнечник. Оперативная оценка качества и вывоз своим транспортом со склада.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+      <div class="it rv"><img src="../rapeseed.webp" alt="Рапс" loading="lazy" decoding="async">
+        <div><div class="t">Рапс</div><div class="d">Принимаем рапс озимый и яровой. Полное оформление документов и карантинных сертификатов. Собственная логистика.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+      <div class="it rv"><img src="../soybeans.webp" alt="Соя" loading="lazy" decoding="async">
+        <div><div class="t">Соя</div><div class="d">Закупаем сою продовольственную и кормовую. Гибкие условия приёмки.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+      <div class="it rv"><img src="../flax-seeds.webp" alt="Лён" loading="lazy" decoding="async">
+        <div><div class="t">Лён</div><div class="d">Закупаем лён масличный. Вывозим своим транспортом со склада. Полное документальное сопровождение.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+      <div class="it rv"><img src="../mustard-seeds.webp" alt="Горчица" loading="lazy" decoding="async">
+        <div><div class="t">Горчица</div><div class="d">Принимаем горчицу жёлтую и сарептскую. Работаем напрямую с фермерами и агентами.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+      <div class="it rv"><img src="../peas.webp" alt="Горох" loading="lazy" decoding="async">
+        <div><div class="t">Горох</div><div class="d">Закупаем горох продовольственный и кормовой. Лабораторный анализ качества при приёмке.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+      <div class="it rv"><img src="../chickpeas.webp" alt="Нут" loading="lazy" decoding="async">
+        <div><div class="t">Нут</div><div class="d">Принимаем нут всех типов и калибров. Особенно интересен крупнокалиберный нут типа Кабули.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+      <div class="it rv"><img src="../lentils.webp" alt="Чечевица" loading="lazy" decoding="async">
+        <div><div class="t">Чечевица</div><div class="d">Закупаем чечевицу продовольственную. Оперативная оценка качества и расчёт после приёмки партии.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Узнать цену →</a></div>
+    </div>
+  </section>
+
+  <!-- ============ ПРОДАЁМ ============ -->
+  <section id="prodaem">
+    <div class="sh rv">
+      <div class="eyebrow">Продаём</div>
+      <h2>Удобрения с доставкой на хозяйство</h2>
+      <p>Восемь позиций основного ассортимента. Доставка по всему региону.</p>
+    </div>
+    <div class="list">
+      <div class="grp">Азотные</div>
+      <div class="it rv"><img src="../ammonium-nitrate.webp" alt="Аммиачная селитра" loading="lazy" decoding="async">
+        <div><div class="t">Аммиачная селитра <span class="fx">N 34.4%</span></div><div class="d">Универсальное азотное удобрение для основного и предпосевного внесения. Быстро усваивается, подходит для всех типов почв.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Цена →</a></div>
+      <div class="it rv"><img src="../carbamide.webp" alt="Карбамид" loading="lazy" decoding="async">
+        <div><div class="t">Карбамид (мочевина) <span class="fx">N 46.2%</span></div><div class="d">Самое концентрированное твёрдое азотное удобрение. Для основного внесения, подкормок и приготовления КАС.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Цена →</a></div>
+      <div class="it rv"><img src="../kas32.webp" alt="КАС-32" loading="lazy" decoding="async">
+        <div><div class="t">КАС-32 <span class="fx">N 32%</span></div><div class="d">Карбамидно-аммиачная смесь — жидкое азотное удобрение для точного внесения опрыскивателями.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Цена →</a></div>
+
+      <div class="grp">Фосфорные</div>
+      <div class="it rv"><img src="../ammophos.webp" alt="Аммофос" loading="lazy" decoding="async">
+        <div><div class="t">Аммофос <span class="fx">NP 12:52</span></div><div class="d">Концентрированное фосфорно-азотное удобрение для основного и рядкового внесения.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Цена →</a></div>
+      <div class="it rv"><img src="../dap.webp" alt="Диаммонийфосфат" loading="lazy" decoding="async">
+        <div><div class="t">Диаммонийфосфат (DAP) <span class="fx">NP 18:46</span></div><div class="d">Фосфорное удобрение с повышенным содержанием азота. Для осеннего внесения под зерновые и масличные.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Цена →</a></div>
+
+      <div class="grp">Калийные</div>
+      <div class="it rv"><img src="../potassium-chloride.webp" alt="Хлористый калий" loading="lazy" decoding="async">
+        <div><div class="t">Хлористый калий <span class="fx">K₂O 60%</span></div><div class="d">Основное калийное удобрение для осеннего внесения. Повышает устойчивость растений к засухе и заболеваниям.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Цена →</a></div>
+
+      <div class="grp">Комплексные</div>
+      <div class="it rv"><img src="../npk.webp" alt="Нитроаммофоска" loading="lazy" decoding="async">
+        <div><div class="t">Нитроаммофоска <span class="fx">NPK 16:16:16</span></div><div class="d">Универсальное тройное удобрение со сбалансированным составом. Для основного и припосевного внесения.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Цена →</a></div>
+      <div class="it rv"><img src="../sulfoammophos.webp" alt="Сульфоаммофос" loading="lazy" decoding="async">
+        <div><div class="t">Сульфоаммофос <span class="fx">NPS 20:20:14</span></div><div class="d">Азотно-фосфорное удобрение с серой. Особенно эффективно для рапса, подсолнечника и бобовых.</div></div>
+        <a class="g" href="https://t.me/MercoGroupnew_bot">Цена →</a></div>
+    </div>
+  </section>
+
+  <!-- ============ УСЛУГИ ============ -->
+  <section id="uslugi">
+    <div class="sh rv">
+      <div class="eyebrow">Ещё продаём и делаем</div>
+      <h2>Документы и снабжение</h2>
+    </div>
+    <div class="serv rv">
+      <div><div class="st">Декларация соответствия</div><div class="sd">Оформляем на партию сами.</div></div>
+      <div><div class="st">Карантинный сертификат</div><div class="sd">Оформляем сами, включая СДИЗ.</div></div>
+      <div><div class="st">Проверка контрагентов</div><div class="sd">На благонадёжность, до сделки.</div></div>
+      <div><div class="st">Средства защиты растений</div><div class="sd">Подбор препаратов под культуру.</div></div>
+      <div><div class="st">Посевной материал</div><div class="sd">Поставка на хозяйство.</div></div>
+      <div><div class="st">Дизельное топливо</div><div class="sd">Поставка на хозяйство.</div></div>
+    </div>
+  </section>
+
+  <!-- ============ КАЛЬКУЛЯТОРЫ ============ -->
+  <section id="calc">
+    <div class="sh rv">
+      <div class="eyebrow">Посчитать заранее</div>
+      <h2>Калькуляторы</h2>
+      <p>Расчёты справочные — окончательный съём определяется на весах при приёмке.</p>
+    </div>
+    <div class="calc rv">
+      <a href="/calc/priemka/">
+        <div class="eyebrow">Съём по качеству</div>
+        <div class="ct">Калькулятор приёмки</div>
+        <div class="cd">Шесть культур: натура, сор, влажность, масличность, белок. Считает съём от базиса.</div>
+        <span class="cg">Открыть →</span>
+      </a>
+      <a href="/calc/podsolnechnik/">
+        <div class="eyebrow">ГОСТ 22391-2015</div>
+        <div class="ct">Подсолнечник</div>
+        <div class="cd">Расчёт по действующему ГОСТу: масличность, сорная и масличная примесь, влажность.</div>
+        <span class="cg">Открыть →</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ КАК РАБОТАЕМ ============ -->
+  <section id="kak">
+    <div class="sh rv">
+      <div class="eyebrow">Как работаем</div>
+      <h2>Три вещи, о которых спрашивают чаще всего</h2>
+    </div>
+    <div class="why rv">
+      <div><h3>Цена известна заранее</h3><p>Узнайте цену по вашей культуре и качеству в боте — до того как грузить машину.</p></div>
+      <div><h3>Деньги — на весах</h3><p>Расчёт по факту веса на выгрузке. Без предоплаты и скрытых комиссий.</p></div>
+      <div><h3>Бумаги — наши</h3><p>Декларация соответствия, карантинный сертификат, СДИЗ — оформляем сами.</p></div>
+    </div>
+  </section>
+
+  <div class="geo rv">
+    <b>География работы</b>
+    <span>Запорожская область</span><span>Херсонская область</span><span>Крым</span>
+  </div>
+
+  <!-- ============ КОНТАКТЫ ============ -->
+  <section id="kontakty">
+    <div class="sh rv">
+      <div class="eyebrow">Контакты</div>
+      <h2>Каждый отдел на связи напрямую</h2>
+    </div>
+    <div class="cons">
+      <div class="con rv"><div class="av">Н</div><div><div class="nm">Никита</div><div class="rl">Работа с фермерами</div></div><a class="ph" href="tel:+79900165271">+7 990 016-52-71</a></div>
+      <div class="con rv"><div class="av">Е</div><div><div class="nm">Екатерина</div><div class="rl">Работа с фермерами</div></div><a class="ph" href="tel:+79901420102">+7 990 142-01-02</a></div>
+      <div class="con rv"><div class="av">А</div><div><div class="nm">Александр</div><div class="rl">Агенты и трейдеры</div></div><a class="ph" href="tel:+79900165274">+7 990 016-52-74</a></div>
+      <div class="con rv"><div class="av">И</div><div><div class="nm">Иван</div><div class="rl">Отбор анализов</div></div><a class="ph" href="tel:+79900041007">+7 990 004-10-07</a></div>
+      <div class="con rv"><div class="av">М</div><div><div class="nm">Матвей</div><div class="rl">Декларации и документы</div></div><a class="ph" href="tel:+79185894024">+7 918 589-40-24</a></div>
+      <div class="con rv"><div class="av">Н</div><div><div class="nm">Никита</div><div class="rl">Логистика</div></div><a class="ph" href="tel:+79786838762">+7 978 683-87-62</a></div>
+    </div>
+    <div class="act" style="margin-top:30px">
+      <a class="btn p" href="https://t.me/MercoGroupnew_bot">Написать в Telegram-бот</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Мерко Групп. Закупка зерновых, масличных и бобовых культур.</span>
+    <span>@MercoGroupnew_bot</span>
+  </footer>
+</div>
+
+<div class="mob">
+  <a class="p" href="https://t.me/MercoGroupnew_bot">Узнать цену</a>
+  <a class="s" href="tel:+79900165271">Позвонить</a>
+</div>
+
+<script>
+/* появление по мере прокрутки */
+(function(){
+  var els = document.querySelectorAll('.rv');
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {rootMargin:'0px 0px -10% 0px', threshold:.06});
+  els.forEach(function(e,i){ e.style.transitionDelay = (i % 4) * 70 + 'ms'; io.observe(e); });
+})();
+
+/* линия под шапкой появляется только после прокрутки */
+(function(){
+  var h = document.getElementById('hdr'), t = false;
+  function on(){ t = false; h.classList.toggle('stuck', window.scrollY > 8); }
+  window.addEventListener('scroll', function(){ if(!t){ t = true; requestAnimationFrame(on); } }, {passive:true});
+})();
+
+/* меню на телефоне */
+(function(){
+  var b = document.getElementById('bg'), n = document.getElementById('nav');
+  b.addEventListener('click', function(){ n.classList.toggle('open'); });
+  n.addEventListener('click', function(e){ if(e.target.tagName === 'A') n.classList.remove('open'); });
+})();
+</script>
+</body>
+</html>
